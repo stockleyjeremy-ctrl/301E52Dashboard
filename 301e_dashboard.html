@@ -103,6 +103,34 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .acc-body li{margin-bottom:4px}
 .acc-body .data-table{margin:10px 0;background:var(--surface2);border-radius:6px;padding:10px;font-size:12px}
 .obs-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;border-left:3px solid var(--accent)}
+/* Inner tabs */
+.inner-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+.inner-tab-btn{background:none;border:none;color:var(--muted);padding:9px 18px;cursor:pointer;font-size:12px;font-weight:600;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;letter-spacing:.5px}
+.inner-tab-btn:hover{color:var(--text)}
+.inner-tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.inner-page{display:none}
+.inner-page.active{display:block}
+/* Forecasting inputs */
+.fc-toggle-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.fc-toggle-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.fc-toggle-header label{font-weight:600;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.fc-inputs{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.fc-input-group{display:flex;flex-direction:column;gap:3px}
+.fc-input-group label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.fc-input-group input,.fc-input-group select{background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;width:130px}
+.fc-assumption-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:14px}
+.fc-assumption{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px}
+.fc-assumption .fa-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.fc-assumption .fa-current{font-size:10px;color:var(--muted);margin-bottom:6px}
+.fc-assumption input[type=range]{width:100%;accent-color:var(--accent)}
+.fc-result{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.3);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+/* Forward looking cards */
+.fwd-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;border-left:3px solid var(--border)}
+.fwd-card.priority{border-left-color:var(--warn)}
+.fwd-card.opportunity{border-left-color:var(--green)}
+.fwd-card.watch{border-left-color:var(--accent)}
+.fwd-card h4{font-size:12px;font-weight:700;margin-bottom:5px}
+.fwd-card p{font-size:12px;color:var(--muted);line-height:1.6}
 </style>
 </head>
 <body>
@@ -326,6 +354,38 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <div class="card">
+    <h3>Pending Recoveries &amp; Contingent Income <span>Amounts owed to 301-52 · not in MRI AR · update as details confirmed</span></h3>
+    <div class="alert ai" style="margin-bottom:10px">ℹ️ <div>These amounts are not included in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from 5C (secured by lien on shares) or contingent future inflows (flip taxes). Confirm amounts with Braverman and Halstead.</div></div>
+    <table><thead><tr><th>Item</th><th>Category</th><th class="r">Est. Amount</th><th>Security</th><th>Expected Timing</th><th>Status</th></tr></thead><tbody>
+      <tr>
+        <td><strong>5C Legal Fees — Recoverable (Braverman)</strong></td>
+        <td>Legal recovery</td>
+        <td class="r warn">TBD</td>
+        <td>Lien on 5C shares</td>
+        <td>On bankruptcy resolution</td>
+        <td><span class="pill pw">Confirm amount with Braverman</span></td>
+      </tr>
+      <tr>
+        <td><strong>5C LL Remediation Fees</strong></td>
+        <td>Capital recovery</td>
+        <td class="r warn">TBD</td>
+        <td>Lien on 5C shares</td>
+        <td>To be billed back to 5C</td>
+        <td><span class="pill pw">Confirm amount with Halstead</span></td>
+      </tr>
+      <tr>
+        <td><strong>Flip Tax — Unit(s) Listed for Sale</strong></td>
+        <td>Capital inflow</td>
+        <td class="r muted">Contingent</td>
+        <td>Proprietary lease</td>
+        <td>Upon closing · uncertain timing</td>
+        <td><span class="pill pm">Model in FY27 if sale imminent</span></td>
+      </tr>
+    </tbody></table>
+    <p class="note">5C-related recoveries are secured by the co-op's lien on Farley's shares — recovery is expected but timing depends on the bankruptcy proceedings. Flip taxes flow into IDB MM (capital fund) per the proprietary lease; add an estimated amount to the <strong>Forecasting → FY27 Planning</strong> tab when a sale looks likely.</p>
+  </div>
+
+  <div class="card">
     <h3>Monthly Income Breakdown <span>Jul 2025 – Jun 2026</span></h3>
     <p class="note" style="margin-bottom:8px">Bars = estimated maintenance only (base ~$64K/mo). Line = total operating income. Gap above bars = variable income (arrears collections, interest, other). Oct 2025 and Feb/Mar 2026 spikes reflect Farley arrears and possible assessment billing. May 2026 maintenance rate up to ~$5,070/unit.</p>
     <div class="ch300"><canvas id="inc_break"></canvas></div>
@@ -438,174 +498,220 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- ===== SCENARIO PLANNING ===== -->
+<!-- ===== FORECASTING ===== -->
 <div id="scenario" class="page">
-  <div class="alert ai">ℹ️ <div>Model projects from June 2026 forward. IDB Escrow is nearly depleted ($30,879) after funding the July RE tax — it will rebuild from monthly capital assessments (~$22K/mo). Toggle projects on/off to see their financial impact. All figures are estimates; consult contractors for actual quotes.</div></div>
-
-  <div class="card">
-    <h3>Project Pipeline <span>Toggle to include/exclude from projection · Edit costs and timing inline</span></h3>
-    <table class="proj-tbl">
-      <thead><tr><th style="width:30px">✓</th><th>Project</th><th>Category</th><th class="r">Est. Cost</th><th class="c">Months<br>From Now</th><th>Funded From</th><th>Priority</th><th></th></tr></thead>
-      <tbody id="projTableBody"></tbody>
-    </table>
-    <button class="add-proj-btn" onclick="addProject()">+ Add Project</button>
+  <div class="inner-tabs">
+    <button class="inner-tab-btn active" onclick="fcShowTab('fc26',this)">FY26 Forecast</button>
+    <button class="inner-tab-btn" onclick="fcShowTab('fc27',this)">FY27 Planning</button>
   </div>
 
-  <div class="ctrl-row">
-    <div class="ctrl">
-      <label>Maintenance Increase ($/unit/mo)</label>
-      <input type="number" id="pMaintInc" value="0" min="0" max="1000" step="50" oninput="updateProjection()">
+  <!-- FY26 -->
+  <div id="fc26" class="inner-page active">
+    <div class="alert ai">ℹ️ <div>6-month forward projection from Jun 2026 actuals. Toggle capital projects on/off to model their impact on cash. All figures are estimates; actuals will update as MRI reports arrive.</div></div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="lbl">Opening Cash (Jul 1)</div><div class="val">$560,951</div><div class="sub">Jun 2026 close · all accounts</div></div>
+      <div class="kpi"><div class="lbl">Projected Dec Close</div><div class="val" style="color:var(--accent)" id="fc26-kpi-total">—</div><div class="sub" id="fc26-kpi-sub">Calculating…</div></div>
+      <div class="kpi"><div class="lbl">Capital Fund (Dec)</div><div class="val" style="color:var(--accent)" id="fc26-kpi-mm">—</div><div class="sub">IDB MM after capital draws</div></div>
+      <div class="kpi"><div class="lbl">Key Event</div><div class="val warn">~$94K RE Tax</div><div class="sub">Oct quarterly · from IDB Escrow</div></div>
     </div>
-    <div class="ctrl">
-      <label>Assessment (months of $22K/mo)</label>
-      <input type="number" id="pAssessMo" value="0" min="0" max="24" oninput="updateProjection()">
+    <div class="card">
+      <h3>Capital Projects <span>Toggle to include in projection · defaults from LL11 Tracking tab</span></h3>
+      <div class="fc-toggle-card">
+        <div class="fc-toggle-header">
+          <label><input type="checkbox" id="fc-ll11" checked onchange="fcRecalc26()"> LL11 Façade Repair — Remaining Draws</label>
+          <span class="pill pb">Construction</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">MSS contract balance $112,566 · incl. $29,326 retainage · source: LL11 Tracking tab</div>
+        <div class="fc-inputs">
+          <div class="fc-input-group"><label>APP7+ Draws ($)</label><input type="number" id="fc-ll11-draws" value="83240" oninput="fcRecalc26()"></div>
+          <div class="fc-input-group"><label>Retainage ($)</label><input type="number" id="fc-ll11-retain" value="29326" oninput="fcRecalc26()"></div>
+          <div class="fc-input-group"><label>Draw Month</label>
+            <select id="fc-ll11-mo" onchange="fcRecalc26()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;width:130px">
+              <option value="3">Oct 2026</option><option value="4">Nov 2026</option><option value="5">Dec 2026</option>
+            </select>
+          </div>
+          <div class="fc-input-group"><label>Retainage Month</label>
+            <select id="fc-ll11-ret-mo" onchange="fcRecalc26()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;width:130px">
+              <option value="5">Dec 2026</option><option value="6">Jan 2027 (FY27)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="fc-toggle-card">
+        <div class="fc-toggle-header">
+          <label><input type="checkbox" id="fc-ic" onchange="fcRecalc26()"> Intercom System Upgrade</label>
+          <span class="pill pg">Capital</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">One-time installation + ongoing monthly service fee — update with actual quotes when available</div>
+        <div class="fc-inputs">
+          <div class="fc-input-group"><label>Upfront Cost ($)</label><input type="number" id="fc-ic-up" value="25000" oninput="fcRecalc26()"></div>
+          <div class="fc-input-group"><label>Monthly Ongoing ($)</label><input type="number" id="fc-ic-mo" value="150" oninput="fcRecalc26()"></div>
+          <div class="fc-input-group"><label>Install Month</label>
+            <select id="fc-ic-start" onchange="fcRecalc26()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;width:130px">
+              <option value="0">Jul 2026</option><option value="1">Aug 2026</option><option value="2" selected>Sep 2026</option>
+              <option value="3">Oct 2026</option><option value="4">Nov 2026</option><option value="5">Dec 2026</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="ctrl">
-      <label>Assessment Monthly Amount ($)</label>
-      <input type="number" id="pAssessAmt" value="22222" min="0" step="5000" oninput="updateProjection()">
+    <div class="card">
+      <h3>Monthly Cash Projection <span>Jul – Dec 2026</span></h3>
+      <div style="position:relative;height:200px"><canvas id="fc26chart"></canvas></div>
+      <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#4f8ef7;border-radius:2px;margin-right:4px"></span>Total Cash</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#38c172;border-radius:2px;margin-right:4px"></span>Capital Fund (IDB MM)</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#f5a623;border-radius:2px;margin-right:4px"></span>Operating (Cap One)</span>
+      </div>
     </div>
-    <div style="margin-left:auto;font-size:12px;color:var(--muted);align-self:center">← Adjust and chart updates live</div>
+    <div class="card">
+      <h3>Month-by-Month Detail <span>Estimated · actuals update as reports arrive</span></h3>
+      <table>
+        <thead><tr><th>Month</th><th class="r">Maint. + Other</th><th class="r">Op. Expenses</th><th class="r">RE Tax (Escrow)</th><th class="r">Capital Projects (IDB MM)</th><th class="r">Net</th><th class="r">Total Cash</th><th class="r">IDB MM</th></tr></thead>
+        <tbody id="fc26-tbody"></tbody>
+      </table>
+      <p class="note">Operating expenses exclude RE tax (from IDB Escrow) and capital draws (from IDB MM). Intercom monthly fee appears as operating expense post-install. IDB Escrow rebuilds ~$31K/mo from operating; Oct quarterly ~$94K paid from escrow.</p>
+    </div>
   </div>
 
-  <div class="stat-grid">
-    <div class="stat"><div class="sl">Total CapEx (active)</div><div class="sv" id="statCapex">—</div><div class="sn">Sum of active projects</div></div>
-    <div class="stat"><div class="sl">Min Total Cash</div><div class="sv" id="statMinCash">—</div><div class="sn" id="statMinMonth">—</div></div>
-    <div class="stat"><div class="sl">Capital + Covenant at 36 Mo</div><div class="sv" id="statEndRes">—</div><div class="sn">IDB MM + Flagstar</div></div>
-    <div class="stat"><div class="sl">Maint. Increase Needed</div><div class="sv" id="statMaintNeeded">—</div><div class="sn">to keep min cash ≥ $300K</div></div>
-  </div>
-
-  <div class="card"><h3>36-Month Cash Projection <span>May 2026 – Apr 2029</span></h3>
-    <p class="note" style="margin-bottom:10px">Blue = total cash. Green = capital &amp; covenant funds (IDB MM capital fund + Flagstar covenant). RE tax dips every 3 months (from IDB Escrow). Projects shown at timing. Reference lines at $400K (6-mo ideal) and $200K (3-mo min).</p>
-    <div class="ch300"><canvas id="projChart"></canvas></div>
-  </div>
-
-  <div class="card">
-    <h3>Per-Unit Impact Calculator</h3>
-    <table><thead><tr><th>Scenario</th><th class="r">$/unit/mo</th><th class="r">Total Monthly</th><th class="r">Annual/unit</th><th class="r">Months to Fund $100K</th></tr></thead>
-    <tbody>
-      <tr><td>Small increase</td><td class="r">$100</td><td class="r">$1,600</td><td class="r">$1,200</td><td class="r">62.5</td></tr>
-      <tr><td>Moderate increase</td><td class="r">$250</td><td class="r">$4,000</td><td class="r">$3,000</td><td class="r">25</td></tr>
-      <tr><td>Meaningful increase</td><td class="r">$500</td><td class="r">$8,000</td><td class="r">$6,000</td><td class="r">12.5</td></tr>
-      <tr><td>Special assessment (one-time)</td><td class="r">$6,250</td><td class="r">$100,000 total</td><td class="r">$6,250 once</td><td class="r">Immediate</td></tr>
-    </tbody></table>
-    <p class="note">Current avg maintenance ~$5,070/unit/month (May 2026). Annual increases of 3–5% are easier for shareholders to absorb than periodic large jumps.</p>
+  <!-- FY27 -->
+  <div id="fc27" class="inner-page">
+    <div class="alert ai">ℹ️ <div>Set FY27 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Dec 2026 close from FY26 tab.</div></div>
+    <div class="fc-result">
+      <div>
+        <div style="font-size:11px;color:var(--muted)">Required Maintenance Rate — FY27</div>
+        <div style="font-size:22px;font-weight:700;color:var(--accent)" id="fc27-rate">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px" id="fc27-total">Calculating…</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:var(--muted)">vs. Current (~$4,522/unit/mo)</div>
+        <div style="font-size:16px;font-weight:700;margin-top:4px" id="fc27-delta">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Adjust assumptions below</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>FY27 Budget Assumptions <span>Adjust each driver — maintenance rate and projection update automatically</span></h3>
+      <div class="fc-assumption-grid">
+        <div class="fc-assumption">
+          <div class="fa-label">RE Tax</div><div class="fa-current">Current: ~$375,000/yr</div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-retax" min="-5" max="10" value="3" step="0.5" oninput="fcUpdateLabel('retax');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-retax">+3.0%</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-retax">$386,250</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Payroll &amp; Benefits</div><div class="fa-current">Current: ~$159,000/yr</div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-payroll" min="-5" max="15" value="3" step="0.5" oninput="fcUpdateLabel('payroll');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-payroll">+3.0%</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-payroll">$163,770</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Doorman — Additional Raise ($/yr)</div><div class="fa-current">On top of % change above</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-doorman" value="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$/yr</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Utilities</div><div class="fa-current">Current: ~$105,000/yr</div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-util" min="-5" max="15" value="5" step="0.5" oninput="fcUpdateLabel('util');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-util">+5.0%</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-util">$110,250</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Admin &amp; Legal (Normalized)</div><div class="fa-current">FY26 elevated ~$105K (Farley). Normalized est: $45K</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-legal" value="45000" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$/yr</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Repairs &amp; Maintenance</div><div class="fa-current">Current: ~$32,000/yr</div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-rm" min="-20" max="30" value="0" step="1" oninput="fcUpdateLabel('rm');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right" id="fal-rm">+0%</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-rm">$32,000</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Capital Projects — FY27 Additional</div><div class="fa-current">One-time · funded from IDB MM</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-capex" value="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Flip Tax Windfall (if sale closes)</div><div class="fa-current">Contingent · credited to IDB MM capital fund</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-flip" value="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">Min. Cash Buffer Target</div><div class="fa-current">~6-mo operating = $400K (ideal)</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-buffer" value="400000" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>FY27 Monthly Cash Projection <span>Jan – Dec 2027 · dashed = minimum buffer target</span></h3>
+      <div style="position:relative;height:200px"><canvas id="fc27chart"></canvas></div>
+      <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#4f8ef7;border-radius:2px;margin-right:4px"></span>Total Cash</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#38c172;border-radius:2px;margin-right:4px"></span>Capital Fund (IDB MM)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:var(--warn)"></span>Min Buffer</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>FY27 Budget Summary</h3>
+      <table><thead><tr><th>Category</th><th class="r">FY26 Actual (est.)</th><th class="r">FY27 Projected</th><th class="r">Change</th><th class="r">$/unit/mo</th></tr></thead>
+      <tbody id="fc27-budget-tbody"></tbody></table>
+      <p class="note">Debt service fixed at $111,625/yr through Jan 2033 mortgage maturity. Admin/legal normalized from elevated FY26 (Farley-driven). Intercom ongoing monthly fee (if carried from FY26) included in admin line.</p>
+    </div>
+    <div class="card">
+      <h3>Maintenance Rate Scenarios</h3>
+      <table><thead><tr><th>Scenario</th><th class="r">$/unit/mo</th><th class="r">Total Monthly</th><th class="r">Annual/unit</th><th class="r">Year-end Cash (est.)</th><th>vs Buffer</th></tr></thead>
+      <tbody id="fc27-scenario-tbody"></tbody></table>
+      <p class="note">Year-end cash = projected Dec 2027 total across all accounts. Annual increases of 3–5% are generally easier for shareholders to absorb than periodic large jumps. Use buffer target to set the floor.</p>
+    </div>
   </div>
 </div>
 
 <!-- ===== ADVISOR ===== -->
 <div id="advisor" class="page">
-  <div class="alert ai">ℹ️ <div>Expert analysis based on May 2026 financial data. For live Q&amp;A with a NYC co-op advisor, use the <strong>Advisor Chat</strong> tool in the Cowork sidebar.</div></div>
 
-  <div class="section-head" style="margin-top:0">Financial Health Scorecard — Jun 2026</div>
+  <div class="section-head" style="margin-top:0">1 — Latest Month Takeaways <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Jun 2026</span></div>
+
   <div class="scorecard">
-    <div class="score-card"><div class="sc-label">Cash Position</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Adequate</span></div><div class="sc-note">$561K total. IDB Escrow $31K — normal post-RE-tax level, rebuilding for Oct. Cap One $112K. Capital fund $332K. RE tax up 6% vs April.</div></div>
-    <div class="score-card"><div class="sc-label">Capital Fund</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Strong — Monitor vs. LL11</span></div><div class="sc-note">IDB MM $332K funded by assessments &amp; flip taxes. Flagstar $85K is a mortgage covenant minimum. Confirm LL11 total cost before treating surplus as available.</div></div>
-    <div class="score-card"><div class="sc-label">Accounts Receivable</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Tail Risk</span></div><div class="sc-note">$22,433 AR — all Farley (5C) remaining arrears. Paid $66,500 in June (down from $88,950). Final ~$22K expected to clear July 2026.</div></div>
-    <div class="score-card"><div class="sc-label">Legal Exposure</div><div class="sc-rating"><div class="sc-dot" style="background:var(--red)"></div><span style="color:var(--red)">Elevated</span></div><div class="sc-note">Legal YTD $63,522 vs $2,088 budget — $61K over. June: Braverman $10,115 + Fox Rothschild $750. 5C Bankruptcy still billing. Monitor closely.</div></div>
-    <div class="score-card"><div class="sc-label">LL11 Compliance</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">In Progress</span></div><div class="sc-note">Three Ten access fees $8,463 in June. Capital LL11 YTD $16,163. Sidewalk bridge ($1,259 open AP). Confirm full project scope and timeline.</div></div>
-    <div class="score-card"><div class="sc-label">Maintenance Rates</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Stable</span></div><div class="sc-note">Jun maintenance $72,351 (~$4,522/unit) — on budget. May's $81K was one-time. Rate stable; FY2027 budget projects $72,486/mo ($885,913 annual).</div></div>
+    <div class="score-card"><div class="sc-label">Cash Position</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Adequate</span></div><div class="sc-note">$561K total. IDB Escrow $31K — normal post-RE-tax level, rebuilding for Oct. Cap One $112K operating. Capital fund $332K earmarked for LL11 and capital projects.</div></div>
+    <div class="score-card"><div class="sc-label">Capital Fund</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Strong — Monitor vs. LL11</span></div><div class="sc-note">IDB MM $332K. LL11 remaining outlay est. ~$118–130K. Post-LL11 residual ~$200K — healthy but watch for additional capital needs (intercom, plumbing).</div></div>
+    <div class="score-card"><div class="sc-label">Accounts Receivable</div><div class="sc-rating"><div class="sc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Resolving</span></div><div class="sc-note">$22,433 AR — Farley (5C) final balance. Paid $66,500 in Jun; remaining expected to clear Jul 2026. All 15 other units 100% current.</div></div>
+    <div class="score-card"><div class="sc-label">Legal Exposure</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Elevated but Normalizing</span></div><div class="sc-note">YTD legal $63,522 vs $2,088 budget — driven by Farley 5C bankruptcy + Three Ten LL11 access negotiations. Should normalize sharply in H2 2026 as Farley resolves.</div></div>
+    <div class="score-card"><div class="sc-label">LL11 Compliance</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">In Progress</span></div><div class="sc-note">77.89% work complete per APP6 (Mar 2026). Three Ten access secured ($8,463 Jun). Sidewalk bridge ongoing ($1,259 open AP). APP7+ draws expected as work continues.</div></div>
+    <div class="score-card"><div class="sc-label">Maintenance Rate</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Stable at $4,522/unit</span></div><div class="sc-note">Jun $72,351 — on budget; May's $81K was one-time. FY27 rate decision needed. Use Forecasting → FY27 Planning to model required increase.</div></div>
   </div>
 
-  <div class="section-head">Expert Observations</div>
-  <div class="obs-card"><strong>Maintenance Rate — Stable at $4,522/Unit</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">June 2026 maintenance of $72,351 (~$4,522/unit) confirms May's $81,115 was a one-time adjustment, not a permanent rate increase. Rate is essentially on budget ($72,486 budgeted). Advisory benchmark for full self-funding with capital contributions is $5,200–$5,400/unit. Any future rate increase discussion should account for LL11 and other capital project costs currently drawing on IDB MM.</p></div>
-  <div class="obs-card" style="border-left-color:var(--warn)"><strong>Legal AP: $16K Open — Clarify Status</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">Two law firms (Braverman Greenspoon $7.8K, The Three Ten $8.5K) have open invoices at May 2026 month end. The descriptions reference "access agreement / arch fees negotiation" and "general legal." The Farley matter was the dominant driver of FY2026 legal spend. Confirm whether these are Farley tail billings or new matters. Any new matter should be presented to the board.</p></div>
-  <div class="obs-card" style="border-left-color:var(--green)"><strong>RE Tax Reserve (IDB Escrow) — Working as Designed</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">IDB Escrow ($30,879) is the RE tax reserve account, funded by monthly operating transfers calculated by the accountants to cover quarterly payments. The drop from $124K (May) to $31K (June) reflects the July quarterly payment of $93,503 — this is expected and appropriate behavior. The escrow will rebuild before the October quarterly. Capital project costs (LL11, plumbing) are funded separately from IDB MM.</p></div>
+  <div class="section-head">Observations — Jun 2026</div>
 
-  <div class="section-head">Advisory Topics</div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pb">Staffing</span><span class="ah-title">Union vs. Non-Union Staff — Trade-offs and Prevailing Wages</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>Current status:</strong> 301-52 operates with non-union staff. This provides scheduling flexibility and generally lower total compensation costs compared to a SEIU 32BJ unionized building.</p>
-      <p style="margin-top:8px"><strong>Non-union prevailing wages (NYC, 2026 est.):</strong></p>
-      <div class="data-table">
-        <table><thead><tr><th>Role</th><th class="r">Hourly Range</th><th class="r">Annual Equivalent</th></tr></thead><tbody>
-          <tr><td>Live-in Superintendent</td><td class="r">$28–$38/hr</td><td class="r">$58K–$79K + apt</td></tr>
-          <tr><td>Porter / Handyman</td><td class="r">$22–$30/hr</td><td class="r">$46K–$62K</td></tr>
-          <tr><td>Part-time Doorperson</td><td class="r">$20–$26/hr</td><td class="r">$20K–$30K (part-time)</td></tr>
-        </tbody></table>
-      </div>
-      <p><strong>Union (32BJ) comparison:</strong> Wages are roughly 15–25% higher than non-union, plus mandated benefits (health, pension, paid leave) adding ~$8–12K per FTE annually. Total cost premium for a fully unionized building: +$25K–$45K/year for a 16-unit building.</p>
-      <p style="margin-top:8px"><strong>Considerations for unionizing:</strong> Would require board vote, shareholder communication, and negotiation with 32BJ. Once unionized, reversing is very difficult. Benefits include standardized procedures and union dispute resolution. Not recommended for a building this size unless there are specific staffing management challenges.</p>
-    </div>
+  <div class="obs-card" style="border-left-color:var(--green)"><strong>RE Tax Reserve (IDB Escrow) — Working as Designed</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">IDB Escrow dropped from $124K (May) to $31K (Jun) — this reflects the $93,503 July quarterly payment and is exactly expected behavior. The escrow rebuilds via monthly operating transfers before the October quarterly. Capital costs (LL11, plumbing) are funded separately from IDB MM and do not touch IDB Escrow.</p></div>
+
+  <div class="obs-card" style="border-left-color:var(--green)"><strong>Farley (5C) Arrears — Effectively Resolved</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">$22,433 remaining AR is the final tail of arrears that peaked at $156,592 in Jan 2026. Farley paid $66,500 in June; full clearance expected July 2026. The co-op has also incurred recoverable costs (legal fees, LL remediation) — see the Pending Recoveries tracker on the Income &amp; Receivables tab.</p></div>
+
+  <div class="obs-card" style="border-left-color:var(--warn)"><strong>Legal Fees — Elevated but Peak is Behind Us</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">YTD legal $63,522 vs a $2,088 budget — driven by the Farley 5C bankruptcy proceedings and Three Ten access negotiations for LL11. June showed $10,115 (Braverman $7,820 general + $2,295 bankruptcy). With Farley's arrears resolving, the bankruptcy billing cadence should diminish significantly. Three Ten access negotiations are a capital LL11 cost. Normalized annual legal for a building this size: ~$20–30K; anything above that warrants board visibility.</p></div>
+
+  <div class="section-head">2 — Forward Looking</div>
+
+  <div class="fwd-card priority">
+    <h4>🎯 FY27 Maintenance Rate Decision</h4>
+    <p>Current rate ~$4,522/unit/mo. Operating expenses are projected to rise modestly (RE tax, payroll, utilities inflation). Legal should normalize sharply. The rate required to maintain a $400K cash buffer depends on FY27 budget assumptions — use the <strong>Forecasting → FY27 Planning</strong> tab to model scenarios. Key variable: a 3–5% increase is easiest to absorb; holding flat may require a future special assessment.</p>
   </div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pr">Compliance</span><span class="ah-title">LL97 Carbon Emissions — What It Means for 301-52</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>Local Law 97 (2019)</strong> sets building carbon emissions caps with fines beginning in 2024. For most NYC residential buildings, the compliance path involves reducing gas heating, improving insulation, and upgrading to electric or heat pump systems.</p>
-      <ul>
-        <li>Fines: $268/ton of CO₂ over the cap</li>
-        <li>2024–2029 caps are relatively lenient; 2030+ caps are strict and will require capital investment</li>
-        <li>301-52 uses gas heating (Heating $26,910 YTD, ~$54K/year) — a significant emissions source</li>
-      </ul>
-      <p style="margin-top:8px"><strong>Recommended next steps:</strong> Commission an LL87 energy audit (if not already done — due for buildings over 25K sq ft, but worth doing anyway). Engage an MEP engineer to model emissions and estimate cost of heat pump or high-efficiency boiler upgrade. Budget $50,000–$200,000+ depending on current baseline.</p>
-      <p style="margin-top:8px"><strong>Reserve implication:</strong> LL97 compliance cost should be modeled in the Forecasting tab. Start with a $75K placeholder for 2028-2029 and adjust based on engineering assessment.</p>
-    </div>
+
+  <div class="fwd-card priority">
+    <h4>🏗️ Capital Fund Runway After LL11</h4>
+    <p>IDB MM currently $332K. LL11 remaining outlay est. ~$118–130K. Post-LL11 residual ~$200K. Intercom upgrade (~$25K est.) and any future plumbing capital work will draw on the same fund. Consider a board resolution establishing a minimum capital fund floor (e.g., $150K) before approving new capital spending.</p>
   </div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pw">Finance</span><span class="ah-title">Mortgage Refinancing — $2.35M at 4.75%, Matures Jan 2033</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>Current mortgage:</strong> $2,350,000 at 4.75% fixed rate, maturing January 2033. Annual debt service: $111,625.</p>
-      <p style="margin-top:8px"><strong>Refinancing considerations:</strong> Current rates (mid-2026) are in the 6.5–7.5% range for co-op underlying mortgages — meaningfully above your 4.75%. Refinancing now would increase debt service significantly. Hold the current mortgage.</p>
-      <p style="margin-top:8px"><strong>Action items now:</strong></p>
-      <ul>
-        <li>Begin lender conversations 18–24 months before maturity (i.e., mid-2031)</li>
-        <li>Build reserve fund and maintain clean AR to improve loan terms</li>
-        <li>Consider whether a larger mortgage at maturity could fund LL97 or other capital needs — rates in 2033 are unknown but worth modeling</li>
-      </ul>
-    </div>
+
+  <div class="fwd-card watch">
+    <h4>⚡ LL97 Carbon Emissions — Plan Ahead</h4>
+    <p>Local Law 97 caps tighten materially in 2030. 301-52 uses gas heating (~$54K/yr) — a significant emissions source. 2024–2029 caps are lenient; 2030+ will require capital investment (heat pump upgrade, insulation, etc.). Estimated cost: $50K–$200K+. Recommend commissioning an energy audit alongside LL11 while the engineer is already engaged — marginal incremental cost. Model as a capital project in Forecasting → FY27 Planning (FY28–29 timing).</p>
   </div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pw">Finance</span><span class="ah-title">Setting Maintenance Rates — Methodology</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>May 2026 shows maintenance at ~$5,070/unit</strong> — up from ~$4,000/unit. This is a significant improvement. Here is the framework for evaluating the correct rate:</p>
-      <div class="data-table">
-        <table><thead><tr><th>Cost Component</th><th class="r">Monthly</th><th class="r">Annual</th></tr></thead><tbody>
-          <tr><td>Operating expenses (normalized)</td><td class="r">$40,000</td><td class="r">$480,000</td></tr>
-          <tr><td>RE taxes (quarterly avg)</td><td class="r">$29,500</td><td class="r">$354,000</td></tr>
-          <tr><td>Debt service</td><td class="r">$9,302</td><td class="r">$111,625</td></tr>
-          <tr><td>Reserve contribution (target)</td><td class="r">$5,000</td><td class="r">$60,000</td></tr>
-          <tr><td><strong>Total needed</strong></td><td class="r"><strong>$83,802</strong></td><td class="r"><strong>$1,005,620</strong></td></tr>
-          <tr><td><strong>Per unit (16 units)</strong></td><td class="r"><strong>$5,238</strong></td><td class="r"><strong>$62,851</strong></td></tr>
-        </tbody></table>
-      </div>
-      <p>The May 2026 rate of ~$5,070/unit is close to the $5,238 needed for full self-funding with a reserve contribution. Sustain this level and target a 3–5% annual increase to cover inflation.</p>
-    </div>
+
+  <div class="fwd-card watch">
+    <h4>🏦 Mortgage Maturity — Begin Planning in 2031</h4>
+    <p>Current mortgage $2.35M at 4.75% fixed, maturing January 2033. Debt service $111,625/yr (fixed). Current market rates 6.5–7.5% — do not refinance now. Begin lender conversations mid-2031 (18–24 months before maturity). A larger refinancing at maturity could fund LL97 or other capital needs depending on rates.</p>
   </div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pr">Governance</span><span class="ah-title">Shareholder Delinquency Protocol</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>The Farley (5C) situation showed the risk of late intervention.</strong> AR grew for 9 consecutive months before escalation. A formal protocol prevents recurrence:</p>
-      <ul>
-        <li><strong>Day 1–30:</strong> Maintenance billed; Halstead sends standard statement</li>
-        <li><strong>Day 31–60:</strong> Halstead late notice; management alerts treasurer</li>
-        <li><strong>Day 61–90:</strong> Board notification; payment plan offered; late fees assessed</li>
-        <li><strong>Day 91–120:</strong> Legal counsel engaged; UCC lien filing initiated</li>
-        <li><strong>Day 120+:</strong> Formal UCC Article 9 foreclosure proceedings</li>
-      </ul>
-      <p style="margin-top:8px"><strong>Proprietary lease remedies:</strong> Co-op boards have strong remedies including lease termination and sale of shares. Engage your co-op attorney to ensure your proprietary lease and house rules expressly authorize these steps.</p>
-    </div>
+
+  <div class="fwd-card opportunity">
+    <h4>📋 Reserve Study — While LL11 Engineer is Engaged</h4>
+    <p>A reserve study professionally documents the building's physical condition and required capital contributions over time. Cost: $3,000–$8,000. Now is the ideal moment — the LL11 engineer (Cowley/Patrizc) could expand scope at marginal cost. Benefits: defensible capital plan, improved lender confidence at 2033 renewal, satisfies Fannie/Freddie reserve adequacy disclosure requirements.</p>
   </div>
-  <div class="acc-item">
-    <div class="acc-head" onclick="toggleAcc(this)">
-      <div class="ah-left"><span class="ah-tag pm">Planning</span><span class="ah-title">Reserve Study — Should 301-52 Commission One?</span></div><span>▼</span>
-    </div>
-    <div class="acc-body">
-      <p><strong>A reserve study is a professional assessment</strong> of the building's physical condition and the funds needed to repair or replace major components over time. It covers roof, façade, mechanical systems, elevators, common areas, and more.</p>
-      <p style="margin-top:8px"><strong>Why now:</strong> LL11 façade work is already underway. The engineer engaged for LL11 may be able to expand scope to a full reserve study at marginal additional cost. Cost: $3,000–$8,000 for a 16-unit NYC co-op.</p>
-      <p style="margin-top:8px"><strong>Benefits:</strong> Sets a defensible capital plan; improves lender confidence at 2033 mortgage renewal; gives shareholders a credible long-term view of assessments needed.</p>
-      <p style="margin-top:8px"><strong>NY State note:</strong> Reserve studies are not legally mandated for co-ops (unlike some condo structures), but Fannie Mae and Freddie Mac now require reserve fund adequacy disclosures. Recommend commissioning one in the next 12 months.</p>
-    </div>
+
+  <div class="fwd-card opportunity">
+    <h4>💡 Utilities — Benchmarking &amp; Rate Review</h4>
+    <p>Con Edison ~$71K/yr, Water/DEP $22,602/yr (up 6% Jul 2026), Insurance ~$32,800/yr — together ~$126K/yr or ~14% of total expenses. Actions: (1) compare Con Edison rates via energy audit; (2) confirm insurance renewal is competitively shopped every 2–3 years; (3) monitor RE tax assessment appeals — a 5% reduction on $375K saves ~$19K/yr annually.</p>
   </div>
+
 </div>
 
 <!-- ===== VENDOR REGISTER ===== -->
@@ -969,119 +1075,156 @@ mkLine('inc_arLine',M12,[{label:'AR Balance',data:AR,borderColor:'#f5a623',backg
 // ===== EXPENSES TAB CHARTS =====
 mkBar('exp_expBar',M12,[{label:'Expenses',data:EXP,backgroundColor:EXP.map(v=>v>120000?'rgba(231,76,60,.7)':v>60000?'rgba(245,166,35,.6)':'rgba(79,142,247,.55)'),borderWidth:0}]);
 
-// ===== SCENARIO PLANNING =====
-let PROJECTS=[
-  {id:1,name:'LL11 Façade Repairs',cat:'Compliance',cost:120000,timing:3,from:'escrow',priority:'High',active:true},
-  {id:2,name:'Intercom System Upgrade',cat:'Building Systems',cost:28000,timing:6,from:'cash',priority:'Medium',active:true},
-  {id:3,name:'Lobby / Doorman Renovation',cat:'Aesthetic',cost:50000,timing:12,from:'escrow',priority:'Low',active:false},
-  {id:4,name:'LL97 Energy Compliance (LED, HVAC)',cat:'Compliance',cost:75000,timing:18,from:'cash',priority:'High',active:false},
-  {id:5,name:'Heating System Upgrade',cat:'Mechanical',cost:60000,timing:24,from:'cash',priority:'Medium',active:false},
-  {id:6,name:'Window Replacement (select units)',cat:'Mechanical',cost:80000,timing:30,from:'escrow',priority:'Low',active:false},
-];
-let nextId=7;
-let projChart=null;
+// ===== FORECASTING =====
+const FC_MONTHS_26=['Jul 26','Aug 26','Sep 26','Oct 26','Nov 26','Dec 26'];
+const FC_MONTHS_27=['Jan 27','Feb 27','Mar 27','Apr 27','May 27','Jun 27','Jul 27','Aug 27','Sep 27','Oct 27','Nov 27','Dec 27'];
+const FC_UNITS=16;
+const FC_OPEN={capOne:112407,idbMM:332107,idbEscrow:30879,flagstar:85558};
+const FC_MAINT_MO=72351,FC_OTHER_MO=2500,FC_ASSESS_MO=22222;
+const FC_PAYROLL_MO=11000,FC_DEBT_MO=9302,FC_ADMIN_MO=5000,FC_RM_MO=2000;
+const FC_ESCROW_REB=31333;
+const FC_UTIL_26=[8000,7000,6000,5500,5000,5000];
+const FC_RETAX_26=[0,0,0,94000,0,0];
+let fc26Ch=null,fc27Ch=null;
+const fcFmt=n=>'$'+Math.round(n).toLocaleString();
+const fcFmtK=n=>'$'+Math.round(n/1000)+'K';
+const fcChOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fcFmt(c.raw)}}},scales:{x:{ticks:{color:'#8892a4',font:{size:10}},grid:{color:'#2e3347'}},y:{ticks:{color:'#8892a4',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#2e3347'}}}};
 
-function renderProjectTable(){
-  const tbody=document.getElementById('projTableBody');
-  tbody.innerHTML='';
-  PROJECTS.forEach(p=>{
-    const cats=['Compliance','Building Systems','Aesthetic','Mechanical','Financial','Other'];
-    const froms=[{v:'cash',l:'Operating Cash (Cap One)'},{v:'escrow',l:'Capital Fund (IDB MM)'},{v:'reserve',l:'Flagstar (Covenant — restricted)'}];
-    const prios=['High','Medium','Low'];
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td class="c"><input type="checkbox" ${p.active?'checked':''} onchange="toggleProj(${p.id},this.checked)"></td>
-      <td><input type="text" value="${p.name}" style="background:none;border:none;color:var(--text);width:100%;font-size:12px" onchange="updateProj(${p.id},'name',this.value)"></td>
-      <td><select class="proj-tbl" onchange="updateProj(${p.id},'cat',this.value)">${cats.map(c=>`<option ${p.cat===c?'selected':''}>${c}</option>`).join('')}</select></td>
-      <td class="r"><input type="number" value="${p.cost}" style="background:none;border:1px solid transparent;color:var(--text);width:75px;font-size:12px;text-align:right;padding:2px 4px;border-radius:3px" onfocus="this.style.border='1px solid var(--border)';this.style.background='var(--surface2)'" onblur="this.style.border='1px solid transparent';this.style.background='none'" onchange="updateProj(${p.id},'cost',+this.value)"></td>
-      <td class="c"><input type="number" value="${p.timing}" min="0" max="36" style="background:none;border:1px solid transparent;color:var(--text);width:50px;font-size:12px;text-align:center;padding:2px 4px;border-radius:3px" onfocus="this.style.border='1px solid var(--border)';this.style.background='var(--surface2)'" onblur="this.style.border='1px solid transparent';this.style.background='none'" onchange="updateProj(${p.id},'timing',+this.value)"></td>
-      <td><select class="proj-tbl" onchange="updateProj(${p.id},'from',this.value)">${froms.map(f=>`<option value="${f.v}" ${p.from===f.v?'selected':''}>${f.l}</option>`).join('')}</select></td>
-      <td><select class="proj-tbl" onchange="updateProj(${p.id},'priority',this.value)">${prios.map(pv=>`<option ${p.priority===pv?'selected':''}>${pv}</option>`).join('')}</select></td>
-      <td><button class="del-btn" onclick="deleteProj(${p.id})">×</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
+function fcShowTab(id,btn){
+  document.querySelectorAll('.inner-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.inner-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='fc27') fcRecalc27();
 }
 
-function toggleProj(id,val){PROJECTS=PROJECTS.map(p=>p.id===id?{...p,active:val}:p);updateProjection()}
-function updateProj(id,key,val){PROJECTS=PROJECTS.map(p=>p.id===id?{...p,[key]:val}:p);updateProjection()}
-function deleteProj(id){PROJECTS=PROJECTS.filter(p=>p.id!==id);renderProjectTable();updateProjection()}
-function addProject(){
-  PROJECTS.push({id:nextId++,name:'New Project',cat:'Other',cost:0,timing:6,from:'cash',priority:'Medium',active:false});
-  renderProjectTable();updateProjection();
-}
-
-function runProjection(){
-  const maintInc=+(document.getElementById('pMaintInc').value)||0;
-  const assessMo=+(document.getElementById('pAssessMo').value)||0;
-  const assessAmt=+(document.getElementById('pAssessAmt').value)||22534;
-  let opCash=112407;
-  let reserve=417665;  // IDB MM ($332,107 capital fund) + Flagstar ($85,558 covenant minimum)
-  let escrow=30879;    // IDB Escrow — nearly depleted (funded July RE tax)
-  const baseIncome=72351+2225+(maintInc*16);
-  const normalOpex=40000;
-  const reTax=new Set();for(let t=3;t<=36;t+=3)reTax.add(t);
-  const active=PROJECTS.filter(p=>p.active);
-  const res={labels:['May \'26'],total:[Math.round(opCash+reserve+escrow)],reserve:[Math.round(reserve)]};
-  for(let m=1;m<=36;m++){
-    const isRE=reTax.has(m);
-    const hasAss=m<=assessMo;
-    opCash+=baseIncome-normalOpex-(isRE?88407:0)+(hasAss?assessAmt:0);
-    for(const p of active){
-      if(p.timing===m){
-        if(p.from==='escrow'){escrow-=p.cost;if(escrow<0){opCash+=escrow;escrow=0;}}
-        else if(p.from==='reserve'){reserve-=p.cost;if(reserve<0){opCash+=reserve;reserve=0;}}
-        else{opCash-=p.cost;}
-      }
-    }
-    const d=new Date(2026,4+m);
-    res.labels.push(d.toLocaleDateString('en-US',{month:'short',year:'2-digit'}));
-    res.total.push(Math.round(opCash+Math.max(0,reserve)+Math.max(0,escrow)));
-    res.reserve.push(Math.round(Math.max(0,reserve)));
+function fcRecalc26(){
+  const ll11On=document.getElementById('fc-ll11').checked;
+  const ll11D=+(document.getElementById('fc-ll11-draws').value)||0;
+  const ll11R=+(document.getElementById('fc-ll11-retain').value)||0;
+  const ll11Mo=+document.getElementById('fc-ll11-mo').value;
+  const ll11RMo=+document.getElementById('fc-ll11-ret-mo').value;
+  const icOn=document.getElementById('fc-ic').checked;
+  const icUp=+(document.getElementById('fc-ic-up').value)||0;
+  const icMo=+(document.getElementById('fc-ic-mo').value)||0;
+  const icSt=+document.getElementById('fc-ic-start').value;
+  let co=FC_OPEN.capOne,mm=FC_OPEN.idbMM,esc=FC_OPEN.idbEscrow;
+  const totA=[],mmA=[],coA=[],rows=[];
+  for(let i=0;i<6;i++){
+    const icFee=(icOn&&i>=icSt)?icMo:0;
+    const opOut=FC_PAYROLL_MO+FC_UTIL_26[i]+FC_ADMIN_MO+FC_RM_MO+FC_DEBT_MO+FC_ESCROW_REB+icFee;
+    const opNet=(FC_MAINT_MO+FC_OTHER_MO)-opOut;
+    let mmOut=0;
+    if(ll11On&&i===ll11Mo) mmOut+=ll11D;
+    if(ll11On&&ll11RMo<6&&i===ll11RMo) mmOut+=ll11R;
+    if(icOn&&i===icSt) mmOut+=icUp;
+    co+=opNet; mm+=FC_ASSESS_MO-mmOut; esc+=FC_ESCROW_REB-FC_RETAX_26[i];
+    const tot=co+mm+esc+FC_OPEN.flagstar;
+    totA.push(Math.round(tot)); mmA.push(Math.round(mm)); coA.push(Math.round(co));
+    rows.push({mo:FC_MONTHS_26[i],inc:FC_MAINT_MO+FC_OTHER_MO,opOut,retax:FC_RETAX_26[i],mmOut,net:opNet+(FC_ASSESS_MO-mmOut)+(FC_ESCROW_REB-FC_RETAX_26[i]),tot,mm:Math.round(mm),retaxMo:FC_RETAX_26[i]>0,projMo:mmOut>0});
   }
-  return res;
+  document.getElementById('fc26-kpi-total').textContent=fcFmt(totA[5]);
+  document.getElementById('fc26-kpi-sub').textContent='Dec 2026 projected total';
+  document.getElementById('fc26-kpi-mm').textContent=fcFmt(mmA[5]);
+  document.getElementById('fc26-tbody').innerHTML=rows.map(r=>`
+    <tr style="${r.retaxMo?'background:rgba(245,166,35,.04)':r.projMo?'background:rgba(79,142,247,.04)':''}">
+      <td><strong>${r.mo}</strong></td><td class="r">${fcFmt(r.inc)}</td>
+      <td class="r">(${fcFmt(r.opOut)})</td>
+      <td class="r ${r.retaxMo?'warn':''}">${r.retax>0?'('+fcFmt(r.retax)+')':'—'}</td>
+      <td class="r ${r.projMo?'':''}">${r.mmOut>0?'('+fcFmt(r.mmOut)+')':'—'}</td>
+      <td class="r ${r.net>=0?'green':'warn'}">${r.net>=0?'+':''}${fcFmt(r.net)}</td>
+      <td class="r"><strong>${fcFmt(r.tot)}</strong></td><td class="r">${fcFmt(r.mm)}</td>
+    </tr>`).join('')+`<tr style="border-top:2px solid var(--border)"><td colspan="6"><strong>Dec 2026 Close</strong></td><td class="r" style="color:var(--accent)"><strong>${fcFmt(totA[5])}</strong></td><td class="r" style="color:var(--accent)">${fcFmt(mmA[5])}</td></tr>`;
+  if(fc26Ch) fc26Ch.destroy();
+  fc26Ch=new Chart(document.getElementById('fc26chart'),{type:'line',data:{labels:FC_MONTHS_26,datasets:[
+    {label:'Total Cash',data:totA,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:3},
+    {label:'IDB MM',data:mmA,borderColor:'#38c172',backgroundColor:'transparent',tension:.3,borderWidth:2,pointRadius:3,borderDash:[4,2]},
+    {label:'Cap One',data:coA,borderColor:'#f5a623',backgroundColor:'transparent',tension:.3,borderWidth:1.5,pointRadius:2,borderDash:[2,2]}
+  ]},options:fcChOpts});
+  window.fc26Dec={capOne:coA[5],idbMM:mmA[5],idbEscrow:FC_OPEN.idbEscrow+FC_ESCROW_REB*6-FC_RETAX_26.reduce((s,v)=>s+v,0),flagstar:FC_OPEN.flagstar};
 }
 
-function updateProjection(){
-  const data=runProjection();
-  const refLine400=new Array(37).fill(400000);
-  const refLine200=new Array(37).fill(200000);
-  if(projChart){
-    projChart.data.labels=data.labels;
-    projChart.data.datasets[0].data=data.total;
-    projChart.data.datasets[1].data=data.reserve;
-    projChart.update();
-  }else{
-    projChart=new Chart(document.getElementById('projChart'),{
-      type:'line',
-      data:{labels:data.labels,datasets:[
-        {label:'Total Cash',data:data.total,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.06)',fill:true,tension:0.25,pointRadius:2,borderWidth:2},
-        {label:'Capital & Covenant Funds',data:data.reserve,borderColor:'#38c172',backgroundColor:'rgba(56,193,114,.06)',fill:true,tension:0.25,pointRadius:2,borderWidth:2},
-        {label:'$400K Target',data:refLine400,borderColor:'rgba(56,193,114,.4)',borderDash:[5,5],pointRadius:0,borderWidth:1,fill:false},
-        {label:'$200K Min',data:refLine200,borderColor:'rgba(231,76,60,.4)',borderDash:[4,4],pointRadius:0,borderWidth:1,fill:false},
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>' $'+Math.round(ctx.raw).toLocaleString()}}},scales:{x:{grid},y:{grid,ticks:{callback:v=>'$'+Math.round(v/1000)+'K'},min:0}}}
-    });
+function fcUpdateLabel(key){
+  const bases={retax:375000,payroll:159000,util:105000,rm:32000};
+  const v=parseFloat(document.getElementById('fa-'+key).value);
+  const lbl=document.getElementById('fal-'+key);
+  lbl.textContent=(v>=0?'+':'')+v.toFixed(1)+'%';
+  lbl.style.color=v>0?'var(--warn)':v<0?'var(--green)':'var(--muted)';
+  const eEl=document.getElementById('fae-'+key);
+  if(eEl) eEl.textContent=fcFmt(bases[key]*(1+v/100));
+}
+
+function fcRecalc27(){
+  const start=window.fc26Dec||FC_OPEN;
+  const retax27=375000*(1+parseFloat(document.getElementById('fa-retax').value)/100);
+  const payroll27=159000*(1+parseFloat(document.getElementById('fa-payroll').value)/100)+(parseFloat(document.getElementById('fa-doorman').value)||0);
+  const util27=105000*(1+parseFloat(document.getElementById('fa-util').value)/100);
+  const rm27=32000*(1+parseFloat(document.getElementById('fa-rm').value)/100);
+  const admin27=parseFloat(document.getElementById('fa-legal').value)||45000;
+  const capex27=parseFloat(document.getElementById('fa-capex').value)||0;
+  const flip27=parseFloat(document.getElementById('fa-flip').value)||0;
+  const buffer=parseFloat(document.getElementById('fa-buffer').value)||400000;
+  const icMo=(document.getElementById('fc-ic')&&document.getElementById('fc-ic').checked)?(parseFloat(document.getElementById('fc-ic-mo').value)||0):0;
+  const admin27T=admin27+icMo*12;
+  const totalExp27=retax27+payroll27+util27+rm27+admin27T+111625;
+  const assess27=FC_ASSESS_MO*12;
+  const startTotal=start.capOne+start.idbMM+start.idbEscrow+start.flagstar;
+  const maintNeed12=Math.max(buffer-startTotal+totalExp27+capex27-assess27-2500*12-flip27,60000*12);
+  const maintMo=maintNeed12/12;
+  const perUnit=maintMo/FC_UNITS;
+  const delta=perUnit-4522;
+  const pct=(delta/4522)*100;
+  document.getElementById('fc27-rate').textContent=fcFmt(perUnit)+'/unit/mo';
+  document.getElementById('fc27-total').textContent='Total monthly maintenance: '+fcFmt(maintMo);
+  const dEl=document.getElementById('fc27-delta');
+  dEl.textContent=(delta>=0?'+':'')+fcFmt(delta)+'/unit ('+(pct>=0?'+':'')+pct.toFixed(1)+'%)';
+  dEl.style.color=delta>0?'var(--warn)':delta<0?'var(--green)':'var(--muted)';
+  const util27A=[9000,8000,7000,5500,5000,5000,8500,8000,7000,5500,5000,5000];
+  const retaxQ=retax27/4;
+  const escR=retax27/12;
+  const retaxMos=[0,0,0,retaxQ,0,0,retaxQ,0,0,retaxQ,0,0];
+  let co=start.capOne,mm=start.idbMM+flip27,esc=start.idbEscrow;
+  const totA=[],mmA=[];
+  for(let i=0;i<12;i++){
+    co+=(maintMo+2500)-(payroll27/12+util27A[i]+rm27/12+admin27T/12+111625/12+escR);
+    mm+=FC_ASSESS_MO-(i===0?capex27:0);
+    esc+=escR-retaxMos[i];
+    totA.push(Math.round(co+mm+esc+start.flagstar));
+    mmA.push(Math.round(mm));
   }
-  const minTotal=Math.min(...data.total);
-  const minIdx=data.total.indexOf(minTotal);
-  const endRes=data.reserve[data.reserve.length-1];
-  const totalCapex=PROJECTS.filter(p=>p.active).reduce((s,p)=>s+p.cost,0);
-  document.getElementById('statCapex').textContent='$'+totalCapex.toLocaleString();
-  document.getElementById('statCapex').className='sv '+(totalCapex>200000?'red':totalCapex>100000?'warn':'');
-  document.getElementById('statMinCash').textContent='$'+minTotal.toLocaleString();
-  document.getElementById('statMinCash').className='sv '+(minTotal<100000?'red':minTotal<200000?'warn':'green');
-  document.getElementById('statMinMonth').textContent=data.labels[minIdx];
-  document.getElementById('statEndRes').textContent='$'+endRes.toLocaleString();
-  document.getElementById('statEndRes').className='sv '+(endRes<76812?'red':endRes<204000?'warn':'green');
-  const shortfall=Math.max(0,300000-minTotal);
-  const need=shortfall>0?Math.ceil(shortfall/36/16):0;
-  document.getElementById('statMaintNeeded').textContent=need>0?'+$'+need+'/unit/mo':'None needed ✓';
-  document.getElementById('statMaintNeeded').className='sv '+(need>200?'red':need>0?'warn':'green');
+  if(fc27Ch) fc27Ch.destroy();
+  fc27Ch=new Chart(document.getElementById('fc27chart'),{type:'line',data:{labels:FC_MONTHS_27,datasets:[
+    {label:'Total Cash',data:totA,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:3},
+    {label:'IDB MM',data:mmA,borderColor:'#38c172',backgroundColor:'transparent',tension:.3,borderWidth:2,pointRadius:3,borderDash:[4,2]},
+    {label:'Buffer',data:Array(12).fill(buffer),borderColor:'#f5a623',backgroundColor:'transparent',borderDash:[6,3],borderWidth:1.5,pointRadius:0}
+  ]},options:fcChOpts});
+  const bRows=[
+    {cat:'Maintenance Income',fy26:-(FC_MAINT_MO*12),fy27:-(maintMo*12),inc:true},
+    {cat:'Real Estate Taxes',fy26:375000,fy27:retax27},
+    {cat:'Payroll & Benefits',fy26:159000,fy27:payroll27},
+    {cat:'Utilities',fy26:105000,fy27:util27},
+    {cat:'Repairs & Maintenance',fy26:32000,fy27:rm27},
+    {cat:'Admin & Legal',fy26:45000,fy27:admin27T},
+    {cat:'Debt Service',fy26:111625,fy27:111625},
+    {cat:'Capital Projects',fy26:0,fy27:capex27},
+  ];
+  const totE26=bRows.filter(r=>r.fy26>0).reduce((s,r)=>s+r.fy26,0);
+  const totE27=bRows.filter(r=>r.fy27>0).reduce((s,r)=>s+r.fy27,0);
+  document.getElementById('fc27-budget-tbody').innerHTML=bRows.map(r=>{
+    const d=r.fy27-r.fy26;
+    return`<tr><td>${r.cat}</td><td class="r muted">${fcFmt(Math.abs(r.fy26))}${r.inc?' (income)':''}</td><td class="r">${fcFmt(Math.abs(r.fy27))}${r.inc?' (income)':''}</td><td class="r ${r.fy26===0&&r.fy27===0?'':d>0?'warn':'green'}">${r.fy26===0&&r.fy27===0?'—':(d>=0?'+':'')+fcFmt(d)}</td><td class="r muted">${r.inc?'income':fcFmt(r.fy27/12/FC_UNITS)}</td></tr>`;
+  }).join('')+`<tr style="border-top:2px solid var(--border);font-weight:700"><td>Total Expenses</td><td class="r muted">${fcFmt(totE26)}</td><td class="r">${fcFmt(totE27)}</td><td class="r ${totE27>totE26?'warn':'green'}">${totE27>totE26?'+':''}${fcFmt(totE27-totE26)}</td><td class="r muted">${fcFmt(totE27/12/FC_UNITS)}</td></tr>`;
+  const scens=[{l:'No increase (hold $4,522)',r:4522},{l:'Modest +2%',r:Math.round(4522*1.02)},{l:'Moderate +5%',r:Math.round(4522*1.05)},{l:'Required (calculated)',r:Math.round(perUnit),h:true},{l:'+10%',r:Math.round(4522*1.10)}];
+  document.getElementById('fc27-scenario-tbody').innerHTML=scens.map(s=>{
+    const mo=s.r*FC_UNITS;
+    const ye=startTotal+(mo+2500)*12-totalExp27-capex27+assess27+flip27;
+    const ok=ye>=buffer;
+    return`<tr ${s.h?'style="background:rgba(79,142,247,.06)"':''}><td>${s.h?'<strong>':''}${s.l}${s.h?'</strong>':''}</td><td class="r ${s.h?'':''}"><strong>${fcFmt(s.r)}</strong></td><td class="r">${fcFmt(mo)}</td><td class="r muted">${fcFmt(s.r*12)}</td><td class="r ${ok?'green':'warn'}">${fcFmt(ye)}</td><td><span class="pill ${ok?'pg':'pw'}">${ok?'Above buffer':'Below buffer'}</span></td></tr>`;
+  }).join('');
 }
 
-renderProjectTable();
-setTimeout(updateProjection,100);
+['retax','payroll','util','rm'].forEach(fcUpdateLabel);
+fcRecalc26();
 
 function toggleAcc(head){
   const body=head.nextElementSibling;
