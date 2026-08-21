@@ -124,6 +124,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .fc-assumption .fa-current{font-size:10px;color:var(--muted);margin-bottom:6px}
 .fc-assumption input[type=range]{width:100%;accent-color:var(--accent)}
 .fc-result{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.3);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+/* Light scorecard (stands out on dark bg) */
+.score-card-light{background:#eef2f7;border-color:#c8d4e8}
+.score-card-light .sc-label{color:#4a5568}
+.score-card-light .sc-note{color:#64748b}
+.score-card-light .sc-rating span{font-weight:700}
 /* Forward looking cards */
 .fwd-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;border-left:3px solid var(--border)}
 .fwd-card.priority{border-left-color:var(--warn)}
@@ -153,9 +158,17 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="nav-grp-hdr analysis-grp">Assessment of our Financials</div>
     <div class="nav-tabs-inner">
       <button onclick="showPage('advisor',this)">Health Analysis</button>
-      <button onclick="showPage('scenario',this)">Forecasting</button>
+      <button onclick="showPage('fy26',this)">FY26 Forecast</button>
+      <button onclick="showPage('fy27',this);fcRecalc27()">FY27 Planning</button>
       <button onclick="showPage('vendors',this)">Vendor Register</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-grp-hdr analysis-grp">Detailed Analysis</div>
+    <div class="nav-tabs-inner">
       <button onclick="showPage('ll11',this)">LL11 Tracking</button>
+      <button onclick="showPage('recoveries',this)">Recoveries</button>
+      <button onclick="showPage('legal',this)">Legal Fees</button>
     </div>
   </div>
 </nav>
@@ -353,37 +366,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <p class="note" style="margin-top:6px"><strong>Board escalation protocol:</strong> Any unit 60+ days past due → flag at next board meeting. 90+ days → formal board notification required. 120+ days → refer to Braverman for legal action.</p>
   </div>
 
-  <div class="card">
-    <h3>Pending Recoveries &amp; Contingent Income <span>Amounts owed to 301-52 · not in MRI AR · update as details confirmed</span></h3>
-    <div class="alert ai" style="margin-bottom:10px">ℹ️ <div>These amounts are not included in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from 5C (secured by lien on shares) or contingent future inflows (flip taxes). Confirm amounts with Braverman and Halstead.</div></div>
-    <table><thead><tr><th>Item</th><th>Category</th><th class="r">Est. Amount</th><th>Security</th><th>Expected Timing</th><th>Status</th></tr></thead><tbody>
-      <tr>
-        <td><strong>5C Legal Fees — Recoverable (Braverman)</strong></td>
-        <td>Legal recovery</td>
-        <td class="r warn">TBD</td>
-        <td>Lien on 5C shares</td>
-        <td>On bankruptcy resolution</td>
-        <td><span class="pill pw">Confirm amount with Braverman</span></td>
-      </tr>
-      <tr>
-        <td><strong>5C LL Remediation Fees</strong></td>
-        <td>Capital recovery</td>
-        <td class="r warn">TBD</td>
-        <td>Lien on 5C shares</td>
-        <td>To be billed back to 5C</td>
-        <td><span class="pill pw">Confirm amount with Halstead</span></td>
-      </tr>
-      <tr>
-        <td><strong>Flip Tax — Unit(s) Listed for Sale</strong></td>
-        <td>Capital inflow</td>
-        <td class="r muted">Contingent</td>
-        <td>Proprietary lease</td>
-        <td>Upon closing · uncertain timing</td>
-        <td><span class="pill pm">Model in FY27 if sale imminent</span></td>
-      </tr>
-    </tbody></table>
-    <p class="note">5C-related recoveries are secured by the co-op's lien on Farley's shares — recovery is expected but timing depends on the bankruptcy proceedings. Flip taxes flow into IDB MM (capital fund) per the proprietary lease; add an estimated amount to the <strong>Forecasting → FY27 Planning</strong> tab when a sale looks likely.</p>
-  </div>
+  <div class="alert ai">ℹ️ <div>Amounts recoverable from 5C (legal fees, LL remediation) and contingent flip taxes are tracked separately — not included in MRI AR. See the <strong>Recoveries</strong> tab under Detailed Analysis.</div></div>
 
   <div class="card">
     <h3>Monthly Income Breakdown <span>Jul 2025 – Jun 2026</span></h3>
@@ -498,15 +481,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- ===== FORECASTING ===== -->
-<div id="scenario" class="page">
-  <div class="inner-tabs">
-    <button class="inner-tab-btn active" onclick="fcShowTab('fc26',this)">FY26 Forecast</button>
-    <button class="inner-tab-btn" onclick="fcShowTab('fc27',this)">FY27 Planning</button>
-  </div>
-
-  <!-- FY26 -->
-  <div id="fc26" class="inner-page active">
+<!-- ===== FY26 FORECAST ===== -->
+<div id="fy26" class="page">
     <div class="alert ai">ℹ️ <div>6-month forward projection from Jun 2026 actuals. Toggle capital projects on/off to model their impact on cash. All figures are estimates; actuals will update as MRI reports arrive.</div></div>
     <div class="kpi-grid">
       <div class="kpi"><div class="lbl">Opening Cash (Jul 1)</div><div class="val">$560,951</div><div class="sub">Jun 2026 close · all accounts</div></div>
@@ -572,10 +548,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
       </table>
       <p class="note">Operating expenses exclude RE tax (from IDB Escrow) and capital draws (from IDB MM). Intercom monthly fee appears as operating expense post-install. IDB Escrow rebuilds ~$31K/mo from operating; Oct quarterly ~$94K paid from escrow.</p>
     </div>
-  </div>
+</div>
 
-  <!-- FY27 -->
-  <div id="fc27" class="inner-page">
+<!-- ===== FY27 PLANNING ===== -->
+<div id="fy27" class="page">
     <div class="alert ai">ℹ️ <div>Set FY27 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Dec 2026 close from FY26 tab.</div></div>
     <div class="fc-result">
       <div>
@@ -655,32 +631,31 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <tbody id="fc27-scenario-tbody"></tbody></table>
       <p class="note">Year-end cash = projected Dec 2027 total across all accounts. Annual increases of 3–5% are generally easier for shareholders to absorb than periodic large jumps. Use buffer target to set the floor.</p>
     </div>
-  </div>
 </div>
 
 <!-- ===== ADVISOR ===== -->
 <div id="advisor" class="page">
 
-  <div class="section-head" style="margin-top:0">1 — Latest Month Takeaways <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Jun 2026</span></div>
+  <div class="section-head" style="margin-top:0">1 — Health Scorecard <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Jun 2026</span></div>
 
   <div class="scorecard">
-    <div class="score-card"><div class="sc-label">Cash Position</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Adequate</span></div><div class="sc-note">$561K total. IDB Escrow $31K — normal post-RE-tax level, rebuilding for Oct. Cap One $112K operating. Capital fund $332K earmarked for LL11 and capital projects.</div></div>
-    <div class="score-card"><div class="sc-label">Capital Fund</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Strong — Monitor vs. LL11</span></div><div class="sc-note">IDB MM $332K. LL11 remaining outlay est. ~$118–130K. Post-LL11 residual ~$200K — healthy but watch for additional capital needs (intercom, plumbing).</div></div>
-    <div class="score-card"><div class="sc-label">Accounts Receivable</div><div class="sc-rating"><div class="sc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Resolving</span></div><div class="sc-note">$22,433 AR — Farley (5C) final balance. Paid $66,500 in Jun; remaining expected to clear Jul 2026. All 15 other units 100% current.</div></div>
-    <div class="score-card"><div class="sc-label">Legal Exposure</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">Elevated but Normalizing</span></div><div class="sc-note">YTD legal $63,522 vs $2,088 budget — driven by Farley 5C bankruptcy + Three Ten LL11 access negotiations. Should normalize sharply in H2 2026 as Farley resolves.</div></div>
-    <div class="score-card"><div class="sc-label">LL11 Compliance</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:var(--warn)">In Progress</span></div><div class="sc-note">77.89% work complete per APP6 (Mar 2026). Three Ten access secured ($8,463 Jun). Sidewalk bridge ongoing ($1,259 open AP). APP7+ draws expected as work continues.</div></div>
-    <div class="score-card"><div class="sc-label">Maintenance Rate</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Stable at $4,522/unit</span></div><div class="sc-note">Jun $72,351 — on budget; May's $81K was one-time. FY27 rate decision needed. Use Forecasting → FY27 Planning to model required increase.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Cash Position</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:#b45309">Adequate</span></div><div class="sc-note">$561K total. IDB Escrow $31K — normal post-RE-tax level, rebuilding for Oct. Cap One $112K operating. Capital fund $332K earmarked for LL11 and capital projects.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Capital Fund</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:#1d4ed8">Strong — Monitor vs. LL11</span></div><div class="sc-note">IDB MM $332K. LL11 remaining outlay est. ~$118–130K. Post-LL11 residual ~$200K — healthy but watch for additional capital needs (intercom, plumbing).</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Accounts Receivable</div><div class="sc-rating"><div class="sc-dot" style="background:var(--green)"></div><span style="color:#166534">Resolving</span></div><div class="sc-note">$22,433 AR — Farley (5C) final balance. Paid $66,500 in Jun; remaining expected to clear Jul 2026. All 15 other units 100% current.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Legal Exposure</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:#b45309">Elevated but Normalizing</span></div><div class="sc-note">YTD legal $63,522 vs $2,088 budget — driven by Farley 5C bankruptcy + Three Ten LL11 access negotiations. Should normalize sharply in H2 2026 as Farley resolves.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">LL11 Compliance</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:#b45309">In Progress</span></div><div class="sc-note">77.89% work complete per APP6 (Mar 2026). Three Ten access secured ($8,463 Jun). Sidewalk bridge ongoing ($1,259 open AP). APP7+ draws expected as work continues.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Maintenance Rate</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:#1d4ed8">Stable at $4,522/unit</span></div><div class="sc-note">Jun $72,351 — on budget; May's $81K was one-time. FY27 rate decision needed. Use FY27 Planning tab to model required increase.</div></div>
   </div>
 
-  <div class="section-head">Observations — Jun 2026</div>
+  <div class="section-head">2 — Latest Month Updates <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Jun 2026</span></div>
 
   <div class="obs-card" style="border-left-color:var(--green)"><strong>RE Tax Reserve (IDB Escrow) — Working as Designed</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">IDB Escrow dropped from $124K (May) to $31K (Jun) — this reflects the $93,503 July quarterly payment and is exactly expected behavior. The escrow rebuilds via monthly operating transfers before the October quarterly. Capital costs (LL11, plumbing) are funded separately from IDB MM and do not touch IDB Escrow.</p></div>
 
-  <div class="obs-card" style="border-left-color:var(--green)"><strong>Farley (5C) Arrears — Effectively Resolved</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">$22,433 remaining AR is the final tail of arrears that peaked at $156,592 in Jan 2026. Farley paid $66,500 in June; full clearance expected July 2026. The co-op has also incurred recoverable costs (legal fees, LL remediation) — see the Pending Recoveries tracker on the Income &amp; Receivables tab.</p></div>
+  <div class="obs-card" style="border-left-color:var(--green)"><strong>Farley (5C) Arrears — Effectively Resolved</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">$22,433 remaining AR is the final tail of arrears that peaked at $156,592 in Jan 2026. Farley paid $66,500 in June; full clearance expected July 2026. The co-op has also incurred recoverable costs (legal fees, LL remediation) — see the Recoveries tab under Detailed Analysis.</p></div>
 
-  <div class="obs-card" style="border-left-color:var(--warn)"><strong>Legal Fees — Elevated but Peak is Behind Us</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">YTD legal $63,522 vs a $2,088 budget — driven by the Farley 5C bankruptcy proceedings and Three Ten access negotiations for LL11. June showed $10,115 (Braverman $7,820 general + $2,295 bankruptcy). With Farley's arrears resolving, the bankruptcy billing cadence should diminish significantly. Three Ten access negotiations are a capital LL11 cost. Normalized annual legal for a building this size: ~$20–30K; anything above that warrants board visibility.</p></div>
+  <div class="obs-card" style="border-left-color:var(--warn)"><strong>Legal Fees — Elevated but Peak is Behind Us</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">YTD legal $63,522 vs a $2,088 budget — driven by the Farley 5C bankruptcy proceedings and Three Ten access negotiations for LL11. June showed $10,115 (Braverman $7,820 general + $2,295 bankruptcy). With Farley's arrears resolving, the bankruptcy billing cadence should diminish significantly. Three Ten access negotiations are a capital LL11 cost. See Legal Fees tab for full detail.</p></div>
 
-  <div class="section-head">2 — Forward Looking</div>
+  <div class="section-head">3 — Forward Looking</div>
 
   <div class="fwd-card priority">
     <h4>🎯 FY27 Maintenance Rate Decision</h4>
@@ -716,31 +691,54 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- ===== VENDOR REGISTER ===== -->
 <div id="vendors" class="page">
-  <div class="alert ai">ℹ️ <div>Vendor register updated with June 2026 actuals from the MRI check register. L12M figures are estimates based on available monthly data.</div></div>
+  <div class="alert ai">ℹ️ <div>Main building vendors — sorted by category, then L12M spend. Updated with June 2026 MRI actuals. L12M figures are estimates; confirm Verizon and minor vendors against latest ledger.</div></div>
   <div class="card">
-    <h3>Vendor Register <span>Jun 2026 actuals · L12M estimates</span></h3>
+    <h3>Main Building Vendors <span>Jun 2026 actuals · L12M estimates · sorted by category</span></h3>
     <table>
-      <thead><tr><th>Vendor</th><th>Category</th><th class="r">Last Month (Jun '26)</th><th class="r">L12M Est.</th><th>Frequency</th><th>Action Level</th><th>Notes</th></tr></thead>
+      <thead><tr><th>Vendor</th><th>Category</th><th class="r">Last Month (Jun '26)</th><th class="r">L12M Est.</th><th>Frequency</th><th>Action upon Invoice</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td><strong>NYC DOF (Real Estate Tax)</strong></td><td>RE Tax</td><td class="r">$93,503</td><td class="r">~$375,000</td><td>Quarterly</td><td><span class="pill pm">Routine</span></td><td>July 2026 quarter paid June; up 6% from $88,407 (April). Funded from IDB Escrow</td></tr>
-        <tr><td><strong>Payroll (PAYR01)</strong></td><td>Payroll</td><td class="r">$10,879</td><td class="r">~$136,000</td><td>Weekly</td><td><span class="pill pm">Routine</span></td><td>4 weekly runs; gross wages $10,113 + employer taxes; slightly lower month</td></tr>
-        <tr><td><strong>Con Edison</strong></td><td>Utilities</td><td class="r">$3,551</td><td class="r">~$71,000</td><td>Monthly</td><td><span class="pill pb">Review</span></td><td>Heating $1,992, bldg electric $1,328, supt electric $152, gas $79; seasonal decline</td></tr>
-        <tr><td><strong>Braverman Greenspoon</strong></td><td>Legal</td><td class="r">$10,115</td><td class="r">~$45,000 est.</td><td>As needed</td><td><span class="pill pr">Escalate</span></td><td>General $7,820 + 5C Bankruptcy $2,295; YTD legal $63,522 — $61K over budget</td></tr>
-        <tr><td><strong>Halstead Management Co. LLC</strong></td><td>Management</td><td class="r">$3,948</td><td class="r">~$43,800</td><td>Monthly</td><td><span class="pill pm">Routine</span></td><td>$3,750 fee + $15 storage + $182.27 payroll processing fee</td></tr>
-        <tr><td><strong>Insurance Carrier</strong></td><td>Insurance</td><td class="r">$0</td><td class="r">~$32,800</td><td>Annual</td><td><span class="pill pb">Review</span></td><td>$5,558 billed Feb 2026; compare at renewal; flag if &gt;10% increase</td></tr>
-        <tr><td><strong>Elite Maintenance Corp</strong></td><td>Capital / Plumbing</td><td class="r">$2,254</td><td class="r">~$23,000</td><td>Project-based</td><td><span class="pill pr">Escalate</span></td><td>5B ceiling work $2,254; YTD capital plumbing $19,083; Fred Smith 5B/5C drain $1,949 open AP</td></tr>
-        <tr><td><strong>NYC Water Board (DEP)</strong></td><td>Utilities</td><td class="r">$22,602</td><td class="r">$22,602</td><td>Annual</td><td><span class="pill pb">Review</span></td><td>Annual MCP billing 7/1/2026–6/30/2027; rate increased 6% July 2026</td></tr>
-        <tr><td><strong>The Three Ten Condominium</strong></td><td>LL11 / Capital</td><td class="r">$8,463</td><td class="r">~$16,000 est.</td><td>Project-based</td><td><span class="pill pr">Escalate</span></td><td>Access agreement arch fees $4,275 + law fees $4,188; LL11 façade negotiations ongoing</td></tr>
-        <tr><td><strong>Pride &amp; Service / UNITEC / El-Tec</strong></td><td>Repairs &amp; Maint.</td><td class="r">$667</td><td class="r">~$7,700</td><td>Monthly</td><td><span class="pill pb">Review</span></td><td>Monthly elevator maintenance contract; VDA annual inspection $455 also billed</td></tr>
-        <tr><td><strong>CC Controlled Combustion</strong></td><td>Repairs &amp; Maint.</td><td class="r">$2,384</td><td class="r">~$6,000 est.</td><td>Annual + as needed</td><td><span class="pill pb">Review</span></td><td>Annual boiler inspection; $757 open AP for boiler inoperative repair</td></tr>
-        <tr><td><strong>DFH Security Systems</strong></td><td>Security / Capital</td><td class="r">$2,885</td><td class="r">~$6,000 est.</td><td>Project-based</td><td><span class="pill pb">Review</span></td><td>Sidewalk bridge rental; $1,259 open AP for Jun invoice; confirm LL11 project scope</td></tr>
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Real Estate Tax</td></tr>
+        <tr><td><strong>NYC DOF (Real Estate Tax)</strong></td><td>RE Tax</td><td class="r">$93,503</td><td class="r">~$375,000</td><td>Quarterly</td><td><span class="pill pm">Routine — fund from IDB Escrow</span></td><td>Jul 2026 quarter paid Jun; up 6% from $88,407 (Apr). Funded from IDB Escrow</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Payroll</td></tr>
+        <tr><td><strong>Payroll (PAYR01)</strong></td><td>Payroll</td><td class="r">$10,879</td><td class="r">~$136,000</td><td>Weekly</td><td><span class="pill pm">Routine</span></td><td>4 weekly runs; gross wages $10,113 + employer taxes</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Utilities</td></tr>
+        <tr><td><strong>Con Edison</strong></td><td>Utilities</td><td class="r">$3,551</td><td class="r">~$71,000</td><td>Monthly</td><td><span class="pill pb">Review if spike &gt;15%</span></td><td>Heating $1,992, bldg electric $1,328, supt electric $152, gas $79; seasonal</td></tr>
+        <tr><td><strong>NYC Water Board (DEP)</strong></td><td>Utilities</td><td class="r">$22,602</td><td class="r">$22,602</td><td>Annual</td><td><span class="pill pb">Review — compare prior year</span></td><td>Annual MCP billing 7/1/2026–6/30/2027; rate increased 6% July 2026</td></tr>
+        <tr><td><strong>Verizon</strong></td><td>Utilities / Telecom</td><td class="r muted">—</td><td class="r muted">~$2,400 est.</td><td>Monthly</td><td><span class="pill pm">Routine</span></td><td>Building telecom / internet; confirm amount from latest ledger</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Legal</td></tr>
+        <tr><td><strong>Braverman Greenspoon</strong></td><td>Legal</td><td class="r warn">$10,115</td><td class="r warn">~$45,000 est.</td><td>As needed</td><td><span class="pill pr">Escalate — review matter/amount</span></td><td>General $7,820 + 5C Bankruptcy $2,295; YTD legal $63,522 — $61K over budget. See Legal Fees tab.</td></tr>
+        <tr><td><strong>Armstrong Teasdale</strong></td><td>Legal</td><td class="r muted">—</td><td class="r muted">~$500 est.</td><td>As needed</td><td><span class="pill pb">Review — confirm matter</span></td><td>LL11 legal — $45 confirmed ledger item; additional billings possible</td></tr>
+        <tr><td><strong>Fox Rothschild LLP</strong></td><td>Legal</td><td class="r">$750</td><td class="r">~$1,500 est.</td><td>As needed</td><td><span class="pill pb">Review — confirm matter</span></td><td>Audit letter prep $750; included in $63,522 legal YTD</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Management</td></tr>
+        <tr><td><strong>Halstead Management Co. LLC</strong></td><td>Management</td><td class="r">$3,948</td><td class="r">~$43,800</td><td>Monthly</td><td><span class="pill pm">Routine — verify fee components</span></td><td>$3,750 fee + $15 storage + $182.27 payroll processing; check for fee escalations</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Insurance</td></tr>
+        <tr><td><strong>Insurance Carrier</strong></td><td>Insurance</td><td class="r">$0</td><td class="r">~$32,800</td><td>Annual</td><td><span class="pill pb">Review — shop every 2–3 yrs</span></td><td>$5,558 billed Feb 2026; flag if &gt;10% increase at renewal; confirm carrier</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Capital / Plumbing</td></tr>
+        <tr><td><strong>Elite Maintenance Corp</strong></td><td>Capital / Plumbing</td><td class="r">$2,254</td><td class="r">~$23,000</td><td>Project-based</td><td><span class="pill pr">Escalate — verify scope &amp; unit</span></td><td>5B ceiling $2,254; YTD capital plumbing $19,083; compare to prior quotes</td></tr>
+        <tr><td><strong>Fred Smith Plumbing</strong></td><td>Capital / Plumbing</td><td class="r">$0</td><td class="r">~$5,000 est.</td><td>As needed</td><td><span class="pill pr">Escalate — verify scope &amp; unit</span></td><td>5B/5C terrace drain repair; $1,949 open AP Jun 30; project-based billing</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Capital / LL11</td></tr>
+        <tr><td><strong>The Three Ten Condominium</strong></td><td>LL11 / Capital</td><td class="r">$8,463</td><td class="r">~$16,000 est.</td><td>Project-based</td><td><span class="pill pr">Escalate — LL11 board oversight</span></td><td>Access agreement arch fees $4,275 + law fees $4,188; negotiations ongoing</td></tr>
+        <tr><td><strong>DFH Security Systems</strong></td><td>LL11 / Capital</td><td class="r">$2,885</td><td class="r">~$12,000 est.</td><td>Project-based</td><td><span class="pill pb">Review — confirm LL11 scope</span></td><td>Sidewalk bridge/shed rental; $1,259 open AP Jun 30; ends when LL11 complete</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Repairs &amp; Maintenance</td></tr>
+        <tr><td><strong>Pride &amp; Service / UNITEC / El-Tec</strong></td><td>Repairs &amp; Maint.</td><td class="r">$667</td><td class="r">~$7,700</td><td>Monthly</td><td><span class="pill pb">Review — confirm contract rate</span></td><td>Monthly elevator maintenance contract; VDA annual inspection $455 also billed</td></tr>
+        <tr><td><strong>CC Controlled Combustion</strong></td><td>Repairs &amp; Maint.</td><td class="r">$2,384</td><td class="r">~$6,000 est.</td><td>Annual + as needed</td><td><span class="pill pb">Review — confirm boiler scope</span></td><td>Annual boiler inspection; $757 open AP for boiler inoperative repair</td></tr>
         <tr><td><strong>OnGuard Pest Control Inc.</strong></td><td>Repairs &amp; Maint.</td><td class="r">$343</td><td class="r">~$4,100</td><td>Monthly</td><td><span class="pill pm">Routine</span></td><td>Monthly pest management contract $342.55/mo</td></tr>
-        <tr><td><strong>Fox Rothschild LLP</strong></td><td>Legal</td><td class="r">$750</td><td class="r">~$1,500 est.</td><td>As needed</td><td><span class="pill pb">Review</span></td><td>Audit letter prep $750; included in $63,522 legal YTD</td></tr>
+
+        <tr style="background:rgba(79,142,247,.03)"><td colspan="7" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Admin</td></tr>
         <tr><td><strong>AvidXChange</strong></td><td>Admin (AP platform)</td><td class="r">−$71</td><td class="r">~$500 est.</td><td>Monthly</td><td><span class="pill pm">Routine</span></td><td>AP processing platform; net credit balance in June from incentives</td></tr>
-        <tr><td><strong>New / Unknown Vendor</strong></td><td>Any</td><td class="r">—</td><td class="r">—</td><td>—</td><td><span class="pill pr">Always Escalate</span></td><td>Co-approver required for any unrecognized vendor</td></tr>
+
+        <tr style="background:rgba(231,76,60,.05)"><td><strong>New / Unknown Vendor</strong></td><td>Any</td><td class="r">—</td><td class="r">—</td><td>—</td><td><span class="pill pr">Always Escalate</span></td><td>Co-approver required for any unrecognized vendor before payment</td></tr>
       </tbody>
     </table>
-    <p class="note">Open AP June 30: $8,364 (Braverman $4,598, Fred Smith plumbing $1,949, DFH Security $1,259, CC Controlled Combustion $757, AvidXChange credit −$198). L12M = estimates from available monthly data.</p>
+    <p class="note">Open AP June 30: $8,364 (Braverman $4,598, Fred Smith $1,949, DFH Security $1,259, CC Combustion $757, AvidXChange credit −$198). L12M = estimates from available monthly data. Confirm Verizon amount from ledger.</p>
   </div>
 </div>
 
@@ -1005,6 +1003,141 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
+<!-- ===== RECOVERIES ===== -->
+<div id="recoveries" class="page">
+  <div class="alert aw">⚠️ <div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from 5C (secured by lien on shares). Update as confirmed with Braverman and Halstead. Flip tax contingency is modeled separately — use the <strong>FY27 Planning</strong> tab's "Flip Tax Windfall" input when a sale is imminent.</div></div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="lbl">5C Legal Recovery</div><div class="val warn">TBD</div><div class="sub">Secured by lien on 5C shares</div></div>
+    <div class="kpi"><div class="lbl">5C LL Remediation</div><div class="val warn">TBD</div><div class="sub">Costs paid by co-op — bill back to 5C</div></div>
+    <div class="kpi"><div class="lbl">Security</div><div class="val green">Lien on Shares</div><div class="sub">Both items secured · recovery expected</div></div>
+    <div class="kpi"><div class="lbl">Flip Tax (contingent)</div><div class="val muted">Contingent</div><div class="sub">Model in FY27 Planning when sale likely</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Pending Recoveries — 5C (Farley) <span>Amounts owed to 301-52 · secured by lien · update as details confirmed</span></h3>
+    <table><thead><tr><th>Item</th><th>Category</th><th class="r">Est. Amount</th><th>Security</th><th>Expected Timing</th><th>Status</th></tr></thead><tbody>
+      <tr>
+        <td><strong>5C Legal Fees — Recoverable (Braverman)</strong></td>
+        <td>Legal recovery</td>
+        <td class="r warn">TBD</td>
+        <td>Lien on 5C shares</td>
+        <td>On bankruptcy resolution</td>
+        <td><span class="pill pw">Confirm amount with Braverman</span></td>
+      </tr>
+      <tr>
+        <td><strong>5C LL Remediation Fees</strong></td>
+        <td>Capital recovery</td>
+        <td class="r warn">TBD</td>
+        <td>Lien on 5C shares</td>
+        <td>To be billed back to 5C</td>
+        <td><span class="pill pw">Confirm amount with Halstead</span></td>
+      </tr>
+    </tbody></table>
+    <p class="note">Both items are secured by the co-op's lien on Farley's shares — recovery is expected but timing depends on the bankruptcy proceedings. Once amounts are confirmed, update TBD fields and note the expected receipt month for cash flow planning.</p>
+  </div>
+
+  <div class="card">
+    <h3>Flip Tax — Contingent Inflow <span>Model in FY27 Planning when a sale is imminent</span></h3>
+    <table><thead><tr><th>Item</th><th>Basis</th><th class="r">Est. Amount</th><th>Destination</th><th>Timing</th><th>Action</th></tr></thead><tbody>
+      <tr>
+        <td><strong>Flip Tax — Unit(s) Listed for Sale</strong></td>
+        <td>% of sale price (per proprietary lease)</td>
+        <td class="r muted">Contingent</td>
+        <td>IDB MM #1545 (capital fund)</td>
+        <td>Upon closing — uncertain timing</td>
+        <td><span class="pill pm">Enter amount in FY27 Planning tab</span></td>
+      </tr>
+    </tbody></table>
+    <p class="note">Flip taxes flow into IDB MM (capital fund) per the proprietary lease. When a sale looks likely, enter the estimated flip tax in the <strong>FY27 Planning → Flip Tax Windfall</strong> input to see the impact on the year-end cash position and required maintenance rate.</p>
+  </div>
+</div>
+
+<!-- ===== LEGAL FEES ===== -->
+<div id="legal" class="page">
+  <div class="alert aw">⚠️ <div><strong>Legal fees are significantly elevated in FY26:</strong> YTD $63,522 vs $2,088 budget — driven by the Farley (5C) bankruptcy matter and Three Ten LL11 access negotiations. The peak is behind us; expect sharp normalization in H2 2026 and FY27.</div></div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="lbl">Legal Fees YTD (FY26)</div><div class="val red">$63,522</div><div class="sub">Feb – Jun 2026 · vs $2,088 budget</div></div>
+    <div class="kpi"><div class="lbl">FY26 Budget</div><div class="val muted">$2,088</div><div class="sub">Annual legal budget (was insufficient)</div></div>
+    <div class="kpi"><div class="lbl">Variance</div><div class="val red">+$61,434</div><div class="sub">Farley + Three Ten access</div></div>
+    <div class="kpi"><div class="lbl">Normalized Run Rate</div><div class="val warn">~$20–30K/yr</div><div class="sub">Typical for a building this size</div></div>
+    <div class="kpi"><div class="lbl">Open AP (Braverman)</div><div class="val warn">$4,598</div><div class="sub">As of Jun 30, 2026</div></div>
+    <div class="kpi"><div class="lbl">FY27 Budget Rec.</div><div class="val">~$25–35K</div><div class="sub">Buffer for ongoing matters; model in FY27 Planning</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Legal Fee Detail by Matter <span>YTD Feb – Jun 2026</span></h3>
+    <table><thead><tr><th>Firm</th><th>Matter</th><th class="r">Est. YTD Amount</th><th>Status</th><th>Notes</th></tr></thead><tbody>
+      <tr>
+        <td><strong>Braverman Greenspoon</strong></td>
+        <td>Farley (5C) Bankruptcy</td>
+        <td class="r warn">~$30–35K est.</td>
+        <td><span class="pill pw">Ongoing — winding down</span></td>
+        <td>Bankruptcy proceedings; billings expected to diminish as case resolves. Recoverable from 5C (see Recoveries tab).</td>
+      </tr>
+      <tr>
+        <td><strong>Braverman Greenspoon</strong></td>
+        <td>General / Other</td>
+        <td class="r warn">~$20–25K est.</td>
+        <td><span class="pill pb">Active</span></td>
+        <td>General corporate, board matters, correspondence; $4,598 open AP Jun 30</td>
+      </tr>
+      <tr>
+        <td><strong>Braverman Greenspoon</strong></td>
+        <td>Three Ten LL11 Access (LL11 capital)</td>
+        <td class="r">~$5,000–6,000 est.</td>
+        <td><span class="pill pb">Access secured</span></td>
+        <td>Portion of YTD attributable to Three Ten access negotiations — LL11 capital cost, not operating expense. $336 confirmed; full estimate TBD.</td>
+      </tr>
+      <tr>
+        <td><strong>Armstrong Teasdale</strong></td>
+        <td>LL11 Legal</td>
+        <td class="r">$45</td>
+        <td><span class="pill pg">Minimal</span></td>
+        <td>Single confirmed line item from payee ledger; LL11 capital cost</td>
+      </tr>
+      <tr>
+        <td><strong>Fox Rothschild LLP</strong></td>
+        <td>Audit Letter</td>
+        <td class="r">$750</td>
+        <td><span class="pill pg">One-time</span></td>
+        <td>Audit letter preparation — annual, not expected to recur mid-year</td>
+      </tr>
+      <tr style="border-top:2px solid var(--border);font-weight:700">
+        <td colspan="2"><strong>Total Legal YTD</strong></td>
+        <td class="r red"><strong>$63,522</strong></td>
+        <td colspan="2" class="muted" style="font-size:11px">Braverman split between matters is estimated; confirm with firm</td>
+      </tr>
+    </tbody></table>
+    <p class="note">The LL11-related legal portion (Three Ten access negotiations, Armstrong Teasdale) is properly a <strong>capital expense</strong> and should be captured in the LL11 project cost — see LL11 Tracking tab. The remaining operating legal should normalize sharply once the Farley bankruptcy is resolved.</p>
+  </div>
+
+  <div class="card">
+    <h3>Monthly Legal Fee Log <span>FY26 · Braverman primary billing</span></h3>
+    <table><thead><tr><th>Month</th><th class="r">Braverman — Bankruptcy</th><th class="r">Braverman — General</th><th class="r">Other Firms</th><th class="r">Monthly Total</th><th>Notes</th></tr></thead><tbody>
+      <tr><td>Feb 2026</td><td class="r warn">$22,500 est.</td><td class="r">~$5,000 est.</td><td class="r">—</td><td class="r warn">~$27,500</td><td>Large billing — peak Farley matter activity</td></tr>
+      <tr><td>Mar 2026</td><td class="r warn">$5,000 est.</td><td class="r">~$3,000 est.</td><td class="r">$750</td><td class="r warn">~$8,750</td><td>Fox Rothschild audit letter</td></tr>
+      <tr><td>Apr 2026</td><td class="r">$3,000 est.</td><td class="r">~$5,000 est.</td><td class="r">—</td><td class="r warn">~$8,000</td><td>General matters</td></tr>
+      <tr><td>May 2026</td><td class="r green">$416</td><td class="r">—</td><td class="r">—</td><td class="r green">$416</td><td>Sharp drop — Farley payments receiving; billing slowed</td></tr>
+      <tr><td>Jun 2026</td><td class="r warn">$2,295</td><td class="r">$7,820</td><td class="r">—</td><td class="r warn">$10,115</td><td>Braverman general $7,820 + bankruptcy $2,295; $4,598 open AP</td></tr>
+      <tr style="border-top:2px solid var(--border);font-weight:700"><td><strong>YTD Total</strong></td><td class="r warn" colspan="3"><strong>$63,522</strong></td><td class="r red"><strong>$63,522</strong></td><td class="muted" style="font-size:11px">vs $2,088 annual budget</td></tr>
+    </tbody></table>
+    <p class="note">Monthly breakdown is partially estimated — confirm exact per-matter split with Braverman. Note: Feb 2026 was the largest single month and coincided with peak Farley collection activity. May's $416 shows how quickly billing can normalize when active matters wind down.</p>
+  </div>
+
+  <div class="card">
+    <h3>Forward-Looking Legal Budget Guidance</h3>
+    <table><thead><tr><th>Scenario</th><th class="r">Annual Budget</th><th>Assumptions</th></tr></thead><tbody>
+      <tr><td>Normalized (no active matters)</td><td class="r green">$20,000–$25,000</td><td>General corporate, board matters, lease renewals; no litigation</td></tr>
+      <tr><td>Base case FY27</td><td class="r">$25,000–$35,000</td><td>Residual Farley bankruptcy tail + general matters; recommended FY27 budget</td></tr>
+      <tr><td>Elevated (new matter)</td><td class="r warn">$40,000–$60,000</td><td>If a new litigation matter arises — flag to board immediately</td></tr>
+      <tr><td>FY26 Actual (elevated)</td><td class="r red">~$63,522</td><td>Farley + Three Ten + general; not expected to repeat</td></tr>
+    </tbody></table>
+    <p class="note">For FY27 budget modeling, use $30,000 as a conservative estimate in the <strong>FY27 Planning → Admin &amp; Legal</strong> input. Any new litigation or lender counsel engagement should trigger a board notification and budget revision.</p>
+  </div>
+</div>
+
 <script>
 // ===== DATA =====
 const M12=['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26'];
@@ -1225,6 +1358,7 @@ function fcRecalc27(){
 
 ['retax','payroll','util','rm'].forEach(fcUpdateLabel);
 fcRecalc26();
+setTimeout(fcRecalc27, 150);
 
 function toggleAcc(head){
   const body=head.nextElementSibling;
