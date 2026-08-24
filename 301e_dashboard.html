@@ -614,10 +614,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     <div class="card">
       <h3>Month-by-Month Detail <span>Estimated · actuals update as reports arrive</span></h3>
       <table>
-        <thead><tr><th>Month</th><th class="r">Maint. + Other</th><th class="r">Op. Expenses</th><th class="r">RE Tax (Escrow)</th><th class="r">Capital Projects (IDB MM)</th><th class="r">Net</th><th class="r">Total Cash</th><th class="r">IDB MM</th></tr></thead>
+        <thead><tr><th>Month</th><th class="r">Maint. + Other</th><th class="r">Assessment</th><th class="r">Op. Expenses</th><th class="r">RE Tax (Escrow)</th><th class="r">Capital Projects (IDB MM)</th><th class="r">Net</th><th class="r">Total Cash</th><th class="r">IDB MM</th></tr></thead>
         <tbody id="fc26-tbody"></tbody>
       </table>
-      <p class="note">Operating expenses exclude RE tax (from IDB Escrow) and capital draws (from IDB MM). Intercom monthly fee appears as operating expense post-install. IDB Escrow rebuilds ~$31K/mo from operating; Oct quarterly ~$94K paid from escrow.</p>
+      <p class="note">Operating expenses exclude RE tax (from IDB Escrow) and capital draws (from IDB MM). <strong>Special Assessment:</strong> the $22,222/month capital assessment final billing was June 2026 — it does not appear in this forecast period (Jul–Dec 2026). Intercom monthly fee appears as operating expense post-install. IDB Escrow rebuilds ~$31K/mo from operating; Oct quarterly ~$94K paid from escrow.</p>
     </div>
 </div>
 
@@ -675,6 +675,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <div class="fc-assumption">
           <div class="fa-label">Flip Tax Windfall (if sale closes)</div><div class="fa-current">Contingent · credited to IDB MM capital fund</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-flip" value="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$</span></div>
+        </div>
+        <div class="fc-assumption">
+          <div class="fa-label">New Special Assessment ($/mo to IDB MM)</div><div class="fa-current">Prior assessment ended Jun 2026 · default $0</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-new-assess" value="0" min="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$/mo (→ IDB MM)</span></div>
         </div>
         <div class="fc-assumption">
           <div class="fa-label">Min. Cash Buffer Target</div><div class="fa-current">~6-mo operating = $400K (ideal)</div>
@@ -1355,23 +1359,25 @@ function fcRecalc26(){
     if(ll11On&&i===ll11Mo) mmOut+=ll11D;
     if(ll11On&&ll11RMo<6&&i===ll11RMo) mmOut+=ll11R;
     if(icOn&&i===icSt) mmOut+=icUp;
-    co+=opNet; mm+=FC_ASSESS_MO-mmOut; esc+=FC_ESCROW_REB-FC_RETAX_26[i];
+    const assessMo=0; // Assessment ended June 2026 — does not apply to any month in the Jul–Dec forecast
+    co+=opNet; mm+=assessMo-mmOut; esc+=FC_ESCROW_REB-FC_RETAX_26[i];
     const tot=co+mm+esc+FC_OPEN.flagstar;
     totA.push(Math.round(tot)); mmA.push(Math.round(mm)); coA.push(Math.round(co));
-    rows.push({mo:FC_MONTHS_26[i],inc:FC_MAINT_MO+FC_OTHER_MO,opOut,retax:FC_RETAX_26[i],mmOut,net:opNet+(FC_ASSESS_MO-mmOut)+(FC_ESCROW_REB-FC_RETAX_26[i]),tot,mm:Math.round(mm),retaxMo:FC_RETAX_26[i]>0,projMo:mmOut>0});
+    rows.push({mo:FC_MONTHS_26[i],inc:FC_MAINT_MO+FC_OTHER_MO,assess:assessMo,opOut,retax:FC_RETAX_26[i],mmOut,net:opNet+(assessMo-mmOut)+(FC_ESCROW_REB-FC_RETAX_26[i]),tot,mm:Math.round(mm),retaxMo:FC_RETAX_26[i]>0,projMo:mmOut>0,lastAssess:i===0});
   }
   document.getElementById('fc26-kpi-total').textContent=fcFmt(totA[5]);
   document.getElementById('fc26-kpi-sub').textContent='Dec 2026 projected total';
   document.getElementById('fc26-kpi-mm').textContent=fcFmt(mmA[5]);
   document.getElementById('fc26-tbody').innerHTML=rows.map(r=>`
-    <tr style="${r.retaxMo?'background:rgba(245,166,35,.04)':r.projMo?'background:rgba(79,142,247,.04)':''}">
+    <tr style="${r.retaxMo?'background:rgba(245,166,35,.04)':r.projMo?'background:rgba(79,142,247,.04)':r.lastAssess?'background:rgba(56,193,114,.04)':''}">
       <td><strong>${r.mo}</strong></td><td class="r">${fcFmt(r.inc)}</td>
+      <td class="r ${r.lastAssess?'green':''}">${r.assess>0?fcFmt(r.assess):'<span class="muted">—</span>'}</td>
       <td class="r">(${fcFmt(r.opOut)})</td>
       <td class="r ${r.retaxMo?'warn':''}">${r.retax>0?'('+fcFmt(r.retax)+')':'—'}</td>
-      <td class="r ${r.projMo?'':''}">${r.mmOut>0?'('+fcFmt(r.mmOut)+')':'—'}</td>
+      <td class="r">${r.mmOut>0?'('+fcFmt(r.mmOut)+')':'—'}</td>
       <td class="r ${r.net>=0?'green':'warn'}">${r.net>=0?'+':''}${fcFmt(r.net)}</td>
       <td class="r"><strong>${fcFmt(r.tot)}</strong></td><td class="r">${fcFmt(r.mm)}</td>
-    </tr>`).join('')+`<tr style="border-top:2px solid var(--border)"><td colspan="6"><strong>Dec 2026 Close</strong></td><td class="r" style="color:var(--accent)"><strong>${fcFmt(totA[5])}</strong></td><td class="r" style="color:var(--accent)">${fcFmt(mmA[5])}</td></tr>`;
+    </tr>`).join('')+`<tr style="border-top:2px solid var(--border)"><td colspan="7"><strong>Dec 2026 Close</strong></td><td class="r" style="color:var(--accent)"><strong>${fcFmt(totA[5])}</strong></td><td class="r" style="color:var(--accent)">${fcFmt(mmA[5])}</td></tr>`;
   if(fc26Ch){try{fc26Ch.destroy();}catch(ex){}}
   try{fc26Ch=new Chart(document.getElementById('fc26chart'),{type:'line',data:{labels:FC_MONTHS_26,datasets:[
     {label:'Total Cash',data:totA,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:3},
@@ -1404,7 +1410,9 @@ function fcRecalc27(){
   const icMo=(document.getElementById('fc-ic')&&document.getElementById('fc-ic').checked)?(parseFloat(document.getElementById('fc-ic-mo').value)||0):0;
   const admin27T=admin27+icMo*12;
   const totalExp27=retax27+payroll27+util27+rm27+admin27T+111625;
-  const assess27=FC_ASSESS_MO*12;
+  // Special assessment ended July 2026 — FY28 has no assessment unless board approves a new one
+  const newAssessMo=parseFloat(document.getElementById('fa-new-assess')?.value)||0;
+  const assess27=newAssessMo*12;
   const startTotal=start.capOne+start.idbMM+start.idbEscrow+start.flagstar;
   // capex27 excluded from maintNeed: capital projects are IDB MM-funded, not maintenance-funded
   const maintNeed12Raw=buffer-startTotal+totalExp27-assess27-2500*12-flip27;
@@ -1429,7 +1437,7 @@ function fcRecalc27(){
   const totA=[],mmA=[];
   for(let i=0;i<12;i++){
     co+=(maintMo+2500)-(payroll27/12+util27A[i]+rm27/12+admin27T/12+111625/12+escR);
-    mm+=FC_ASSESS_MO-(i===0?capex27:0);
+    mm+=newAssessMo-(i===0?capex27:0); // assessment = board-approved new assessment only (default 0)
     esc+=escR-retaxMos[i];
     totA.push(Math.round(co+mm+esc+start.flagstar));
     mmA.push(Math.round(mm));
@@ -1442,6 +1450,7 @@ function fcRecalc27(){
   ]},options:fcChOpts});}catch(ex){console.warn('FY27 chart error:',ex.message);}
   const bRows=[
     {cat:'Maintenance Income',fy26:-(FC_MAINT_MO*12),fy27:-(maintMo*12),inc:true},
+    {cat:'Special Assessment (→ IDB MM)',fy26:-(FC_ASSESS_MO*12),fy27:assess27>0?-assess27:0,inc:true,note:assess27===0?'Final billing Jun 2026':'New board-approved assessment'},
     {cat:'Real Estate Taxes',fy26:375000,fy27:retax27},
     {cat:'Payroll & Benefits',fy26:159000,fy27:payroll27},
     {cat:'Utilities',fy26:105000,fy27:util27},
@@ -1454,7 +1463,9 @@ function fcRecalc27(){
   const totE27=bRows.filter(r=>r.fy27>0).reduce((s,r)=>s+r.fy27,0);
   document.getElementById('fc27-budget-tbody').innerHTML=bRows.map(r=>{
     const d=r.fy27-r.fy26;
-    return`<tr><td>${r.cat}</td><td class="r muted">${fcFmt(Math.abs(r.fy26))}${r.inc?' (income)':''}</td><td class="r">${fcFmt(Math.abs(r.fy27))}${r.inc?' (income)':''}</td><td class="r ${r.fy26===0&&r.fy27===0?'':d>0?'warn':'green'}">${r.fy26===0&&r.fy27===0?'—':(d>=0?'+':'')+fcFmt(d)}</td><td class="r muted">${r.inc?'income':fcFmt(r.fy27/12/FC_UNITS)}</td></tr>`;
+    const isZero=r.fy26===0&&r.fy27===0;
+    const fy27disp=r.inc&&r.fy27===0?'<span class="muted">$0 — ended</span>':fcFmt(Math.abs(r.fy27))+(r.inc?' (income)':'');
+    return`<tr${r.note?` title="${r.note}"`:''}><td>${r.cat}${r.note?` <span class="muted" style="font-size:10px">(${r.note})</span>`:''}</td><td class="r muted">${fcFmt(Math.abs(r.fy26))}${r.inc?' (income)':''}</td><td class="r">${fy27disp}</td><td class="r ${isZero?'':d>0?'warn':'green'}">${isZero?'—':(d>=0?'+':'')+fcFmt(d)}</td><td class="r muted">${r.inc?'income':fcFmt(r.fy27/12/FC_UNITS)}</td></tr>`;
   }).join('')+`<tr style="border-top:2px solid var(--border);font-weight:700"><td>Total Expenses</td><td class="r muted">${fcFmt(totE26)}</td><td class="r">${fcFmt(totE27)}</td><td class="r ${totE27>totE26?'warn':'green'}">${totE27>totE26?'+':''}${fcFmt(totE27-totE26)}</td><td class="r muted">${fcFmt(totE27/12/FC_UNITS)}</td></tr>`;
   const scens=[{l:'No increase (hold $4,522)',r:4522},{l:'Modest +2%',r:Math.round(4522*1.02)},{l:'Moderate +5%',r:Math.round(4522*1.05)},{l:'Required (calculated)',r:Math.round(perUnit),h:true},{l:'+10%',r:Math.round(4522*1.10)}];
   document.getElementById('fc27-scenario-tbody').innerHTML=scens.map(s=>{
