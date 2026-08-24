@@ -177,7 +177,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     <div class="nav-tabs-inner">
       <button onclick="showPage('advisor',this)">Health Analysis</button>
       <button onclick="showPage('fy26',this)">FY27 Forecast</button>
-      <button onclick="showPage('fy27',this);fcRecalc27()">FY27 Planning</button>
+      <button onclick="showPage('fy27',this);fcRecalc27()">FY28 Planning</button>
       <button onclick="showPage('vendors',this)">Vendor Register</button>
     </div>
   </div>
@@ -205,15 +205,13 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td><strong>LL11 — Remaining Draws</strong></td><td>~$124K committed draws remain (APP7+ $83K + retainage $29K). Three Ten access secured. Work 77.89% complete per APP6.</td><td>Confirm draw schedule with Halstead; authorize APP7 if inspection pending. See <a href="#" onclick="showPage('ll11',document.querySelector('[onclick*=ll11]'));return false" style="color:var(--accent)">LL11 Tracking</a> tab.</td></tr>
       <tr><td><strong>5C AR — Final $22,433</strong></td><td>Farley's $66,500 June payment left a tail balance. Expected to clear July 2026 per repayment agreement.</td><td>Confirm July receipt with Halstead. If not received by Aug board meeting, assess enforcement options.</td></tr>
       <tr><td><strong>Intercom System Upgrade</strong></td><td>Modeled in FY27 Forecast — upfront ~$25K + monthly $150 service fee (placeholder; quotes pending).</td><td>Approve vendor solicitation or defer. Obtain quotes before Sept board meeting.</td></tr>
-      <tr><td><strong>FY27 Maintenance Rate</strong></td><td>Current $4,522/unit/mo. FY27 Planning tab calculates required rate based on budget assumptions.</td><td>Use FY27 Planning tab to run board scenarios; vote on rate adjustment for Feb 2027.</td></tr>
+      <tr><td><strong>FY28 Maintenance Rate</strong></td><td>Current $4,522/unit/mo. FY28 Planning tab calculates required rate based on budget assumptions.</td><td>Use FY28 Planning tab to run board scenarios; vote on rate adjustment for Feb 2027.</td></tr>
     </tbody></table>
   </div>
 
   <div class="card" style="border-left:3px solid var(--muted)">
     <h3>📋 Open Items <span>TBDs requiring follow-up before they fall through</span></h3>
     <table><thead><tr><th>Item</th><th>Status</th><th>Owner</th><th>Target</th></tr></thead><tbody>
-      <tr><td>5C legal fee recovery (Farley bankruptcy) — confirm exact amount recoverable</td><td><span class="pill pw">TBD</span></td><td>Braverman</td><td>Aug 2026</td></tr>
-      <tr><td>5C LL remediation cost recovery — quantify claim (access, scaffolding, repairs)</td><td><span class="pill pw">TBD</span></td><td>Treasurer + Braverman</td><td>Aug 2026</td></tr>
       <tr><td>Three Ten LLC flip tax ($150K potential) — confirm if triggered by transfer</td><td><span class="pill pw">TBD</span></td><td>Treasurer + Braverman</td><td>On transfer</td></tr>
       <tr><td>LL11 legal split (Braverman vs. Fox Rothschild) — confirm LL11 vs. general allocation</td><td><span class="pill pw">TBD</span></td><td>Halstead</td><td>Next invoice</td></tr>
       <tr><td>Three Ten $8,463 access payment — confirm reclassification to LL11 capital spend</td><td><span class="pill pw">TBD</span></td><td>Treasurer + Halstead</td><td>Jul 2026</td></tr>
@@ -623,12 +621,12 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     </div>
 </div>
 
-<!-- ===== FY27 PLANNING ===== -->
+<!-- ===== FY28 PLANNING ===== -->
 <div id="fy27" class="page">
-    <div class="alert ai">ℹ️ <div>Set FY27 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Dec 2026 close from the FY27 Forecast tab. <strong>FY runs Feb–Jan; FY27 = Feb 2026–Jan 2027.</strong></div></div>
+    <div class="alert ai">ℹ️ <div>Set FY28 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Dec 2026 close from the FY27 Forecast tab. <strong>FY runs Feb–Jan · FY27 = Feb 2026–Jan 2027 (current) · FY28 = Feb 2027–Jan 2028 (planning year).</strong></div></div>
     <div class="fc-result">
       <div>
-        <div style="font-size:11px;color:var(--muted)">Required Maintenance Rate — FY27</div>
+        <div style="font-size:11px;color:var(--muted)">Required Maintenance Rate — FY28 (Feb 2027–Jan 2028)</div>
         <div style="font-size:22px;font-weight:700;color:var(--accent)" id="fc27-rate">—</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px" id="fc27-total">Calculating…</div>
         <div style="font-size:11px;color:var(--warn);margin-top:4px;display:none" id="fc27-floor">⚠ Floor applied — calculated need was below $3,750/unit/mo</div>
@@ -640,17 +638,17 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       </div>
     </div>
     <div class="card">
-      <h3>FY27 Budget Assumptions <span>Adjust each driver — maintenance rate and projection update automatically</span></h3>
+      <h3>FY28 Budget Assumptions <span>Adjust each driver — maintenance rate and projection update automatically</span></h3>
       <div class="fc-assumption-grid">
         <div class="fc-assumption">
           <div class="fa-label">RE Tax</div><div class="fa-current">Current: ~$375,000/yr</div>
           <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-retax" min="-5" max="10" value="3" step="0.5" oninput="fcUpdateLabel('retax');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-retax">+3.0%</span></div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-retax">$386,250</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY28: <span id="fae-retax">$386,250</span></div>
         </div>
         <div class="fc-assumption">
           <div class="fa-label">Payroll &amp; Benefits</div><div class="fa-current">Current: ~$159,000/yr</div>
           <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-payroll" min="-5" max="15" value="3" step="0.5" oninput="fcUpdateLabel('payroll');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-payroll">+3.0%</span></div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-payroll">$163,770</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY28: <span id="fae-payroll">$163,770</span></div>
         </div>
         <div class="fc-assumption">
           <div class="fa-label">Doorman — Additional Raise ($/yr)</div><div class="fa-current">On top of % change above</div>
@@ -659,19 +657,19 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <div class="fc-assumption">
           <div class="fa-label">Utilities</div><div class="fa-current">Current: ~$105,000/yr</div>
           <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-util" min="-5" max="15" value="5" step="0.5" oninput="fcUpdateLabel('util');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right;color:var(--warn)" id="fal-util">+5.0%</span></div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-util">$110,250</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY28: <span id="fae-util">$110,250</span></div>
         </div>
         <div class="fc-assumption">
-          <div class="fa-label">Admin &amp; Legal (Normalized)</div><div class="fa-current">FY26 elevated ~$105K (Farley). Normalized est: $45K</div>
+          <div class="fa-label">Admin &amp; Legal (Normalized)</div><div class="fa-current">FY27 elevated ~$103K+ YTD (Farley + Three Ten). Normalized est for FY28: $45K</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-legal" value="45000" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$/yr</span></div>
         </div>
         <div class="fc-assumption">
           <div class="fa-label">Repairs &amp; Maintenance</div><div class="fa-current">Current: ~$32,000/yr</div>
           <div style="display:flex;align-items:center;gap:8px"><input type="range" id="fa-rm" min="-20" max="30" value="0" step="1" oninput="fcUpdateLabel('rm');fcRecalc27()"><span style="font-size:12px;font-weight:700;min-width:45px;text-align:right" id="fal-rm">+0%</span></div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY27: <span id="fae-rm">$32,000</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Est. FY28: <span id="fae-rm">$32,000</span></div>
         </div>
         <div class="fc-assumption">
-          <div class="fa-label">Capital Projects — FY27 Additional</div><div class="fa-current">One-time · funded from IDB MM</div>
+          <div class="fa-label">Capital Projects — FY28 Additional</div><div class="fa-current">One-time · funded from IDB MM</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="number" id="fa-capex" value="0" oninput="fcRecalc27()" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:4px 7px;font-size:12px;width:90px"><span style="font-size:11px;color:var(--muted)">$</span></div>
         </div>
         <div class="fc-assumption">
@@ -685,7 +683,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       </div>
     </div>
     <div class="card">
-      <h3>FY27 Monthly Cash Projection <span>Jan – Dec 2027 · dashed = minimum buffer target</span></h3>
+      <h3>FY28 Monthly Cash Projection <span>Jan – Dec 2027 approx. · dashed = minimum buffer target</span></h3>
       <div style="position:relative;height:200px"><canvas id="fc27chart"></canvas></div>
       <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px">
         <span><span style="display:inline-block;width:10px;height:10px;background:#4f8ef7;border-radius:2px;margin-right:4px"></span>Total Cash</span>
@@ -694,10 +692,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       </div>
     </div>
     <div class="card">
-      <h3>FY27 Budget Summary</h3>
-      <table><thead><tr><th>Category</th><th class="r">FY26 Actual (est.)</th><th class="r">FY27 Projected</th><th class="r">Change</th><th class="r">$/unit/mo</th></tr></thead>
+      <h3>FY28 Budget Summary</h3>
+      <table><thead><tr><th>Category</th><th class="r">FY27 Baseline (est.)</th><th class="r">FY28 Projected</th><th class="r">Change</th><th class="r">$/unit/mo</th></tr></thead>
       <tbody id="fc27-budget-tbody"></tbody></table>
-      <p class="note">Debt service fixed at $111,625/yr through Jan 2033 mortgage maturity. Admin/legal normalized from elevated FY26 (Farley-driven). Intercom ongoing monthly fee (if carried from FY26) included in admin line.</p>
+      <p class="note">Debt service fixed at $111,625/yr through Jan 2033 mortgage maturity. Admin/legal normalized from elevated FY27 (Farley-driven). Intercom ongoing monthly fee (if carried from FY27 Forecast) included in admin line.</p>
     </div>
     <div class="card">
       <h3>Maintenance Rate Scenarios</h3>
@@ -718,22 +716,22 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     <div class="score-card score-card-light"><div class="sc-label">Accounts Receivable</div><div class="sc-rating"><div class="sc-dot" style="background:var(--green)"></div><span style="color:#166534">Resolving</span></div><div class="sc-note">$22,433 AR — Farley (5C) final balance. Paid $66,500 in Jun; remaining expected to clear Jul 2026. All 15 other units 100% current.</div></div>
     <div class="score-card score-card-light"><div class="sc-label">Legal Exposure</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:#b45309">Elevated but Normalizing</span></div><div class="sc-note">YTD legal $63,522 vs $2,088 budget — driven by Farley 5C bankruptcy + Three Ten LL11 access negotiations. Should normalize sharply in H2 2026 as Farley resolves.</div></div>
     <div class="score-card score-card-light"><div class="sc-label">LL11 Compliance</div><div class="sc-rating"><div class="sc-dot" style="background:var(--warn)"></div><span style="color:#b45309">In Progress</span></div><div class="sc-note">77.89% work complete per APP6 (Mar 2026). Three Ten access secured ($8,463 Jun). Sidewalk bridge ongoing ($1,259 open AP). APP7+ draws expected as work continues.</div></div>
-    <div class="score-card score-card-light"><div class="sc-label">Maintenance Rate</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:#1d4ed8">Stable at $4,522/unit</span></div><div class="sc-note">Jun $72,351 — on budget; May's $81K was one-time. FY27 rate decision needed. Use FY27 Planning tab to model required increase.</div></div>
+    <div class="score-card score-card-light"><div class="sc-label">Maintenance Rate</div><div class="sc-rating"><div class="sc-dot" style="background:var(--accent)"></div><span style="color:#1d4ed8">Stable at $4,522/unit</span></div><div class="sc-note">Jun $72,351 — on budget; May's $81K was one-time. FY28 rate decision needed. Use FY28 Planning tab to model required increase.</div></div>
   </div>
 
   <div class="section-head">2 — Latest Month Updates <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Jun 2026</span></div>
 
   <div class="obs-card" style="border-left-color:var(--green)"><strong>RE Tax Reserve (IDB Escrow) — Working as Designed</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">IDB Escrow dropped from $124K (May) to $31K (Jun) — this reflects the $93,503 July quarterly payment and is exactly expected behavior. The escrow rebuilds via monthly operating transfers before the October quarterly. Capital costs (LL11, plumbing) are funded separately from IDB MM and do not touch IDB Escrow.</p></div>
 
-  <div class="obs-card" style="border-left-color:var(--green)"><strong>Farley (5C) Arrears — Effectively Resolved</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">$22,433 remaining AR is the final tail of arrears that peaked at $156,592 in Jan 2026. Farley paid $66,500 in June; full clearance expected July 2026. The co-op has also incurred recoverable costs (legal fees, LL remediation) — see the Recoveries tab under Detailed Analysis.</p></div>
+  <div class="obs-card" style="border-left-color:var(--green)"><strong>Farley (5C) Arrears — Effectively Resolved</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">$22,433 remaining AR is the final tail of arrears that peaked at $156,592 in Jan 2026. Farley paid $66,500 in June; full clearance expected July 2026. Additional recoverable amounts are tracked separately — see the Recoveries tab under Detailed Analysis.</p></div>
 
   <div class="obs-card" style="border-left-color:var(--warn)"><strong>Legal Fees — Elevated but Peak is Behind Us</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">YTD legal $63,522 vs a $2,088 budget — driven by the Farley 5C bankruptcy proceedings and Three Ten access negotiations for LL11. June showed $10,115 (Braverman $7,820 general + $2,295 bankruptcy). With Farley's arrears resolving, the bankruptcy billing cadence should diminish significantly. Three Ten access negotiations are a capital LL11 cost. See Legal Fees tab for full detail.</p></div>
 
   <div class="section-head">3 — Forward Looking</div>
 
   <div class="fwd-card priority">
-    <h4>🎯 FY27 Maintenance Rate Decision</h4>
-    <p>Current rate ~$4,522/unit/mo. Operating expenses are projected to rise modestly (RE tax, payroll, utilities inflation). Legal should normalize sharply. The rate required to maintain a $400K cash buffer depends on FY27 budget assumptions — use the <strong>Forecasting → FY27 Planning</strong> tab to model scenarios. Key variable: a 3–5% increase is easiest to absorb; holding flat may require a future special assessment.</p>
+    <h4>🎯 FY28 Maintenance Rate Decision</h4>
+    <p>Current rate ~$4,522/unit/mo. Operating expenses are projected to rise modestly (RE tax, payroll, utilities inflation). Legal should normalize sharply in H2 FY27. The rate required to maintain a $400K cash buffer depends on FY28 budget assumptions — use the <strong>FY28 Planning</strong> tab to model scenarios. Key variable: a 3–5% increase is easiest to absorb; holding flat may require a future special assessment.</p>
   </div>
 
   <div class="fwd-card priority">
@@ -743,7 +741,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
   <div class="fwd-card watch">
     <h4>⚡ LL97 Carbon Emissions — Plan Ahead</h4>
-    <p>Local Law 97 caps tighten materially in 2030. 301-52 uses gas heating (~$54K/yr) — a significant emissions source. 2024–2029 caps are lenient; 2030+ will require capital investment (heat pump upgrade, insulation, etc.). Estimated cost: $50K–$200K+. Recommend commissioning an energy audit alongside LL11 while the engineer is already engaged — marginal incremental cost. Model as a capital project in Forecasting → FY27 Planning (FY28–29 timing).</p>
+    <p>Local Law 97 caps tighten materially in 2030. 301-52 uses gas heating (~$54K/yr) — a significant emissions source. 2024–2029 caps are lenient; 2030+ will require capital investment (heat pump upgrade, insulation, etc.). Estimated cost: $50K–$200K+. Recommend commissioning an energy audit alongside LL11 while the engineer is already engaged — marginal incremental cost. Model as a capital project in FY28 Planning (FY30–31 timing for the heavier capital work).</p>
   </div>
 
   <div class="fwd-card watch">
@@ -1118,20 +1116,19 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== RECOVERIES ===== -->
 <div id="recoveries" class="page">
-  <div class="alert aw">⚠️ <div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from 5C (secured by lien on shares). Update as confirmed with Braverman and Halstead. Flip tax contingency is modeled separately — use the <strong>FY27 Planning</strong> tab's "Flip Tax Windfall" input when a sale is imminent.</div></div>
+  <div class="alert aw">⚠️ <div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from 5C (secured by lien on shares). Update as confirmed with Braverman and Halstead.</div></div>
 
   <div class="kpi-grid">
-    <div class="kpi"><div class="lbl">5C Legal Recovery</div><div class="val warn">TBD</div><div class="sub">Secured by lien on 5C shares</div></div>
-    <div class="kpi"><div class="lbl">5C LL Remediation</div><div class="val warn">TBD</div><div class="sub">Costs paid by co-op — bill back to 5C</div></div>
+    <div class="kpi"><div class="lbl">Potential Legal Fee Recovery</div><div class="val warn">TBD</div><div class="sub">Secured by lien on shares</div></div>
+    <div class="kpi"><div class="lbl">Potential LL Remediation Recovery</div><div class="val warn">TBD</div><div class="sub">Costs paid by co-op — recoverable</div></div>
     <div class="kpi"><div class="lbl">Security</div><div class="val green">Lien on Shares</div><div class="sub">Both items secured · recovery expected</div></div>
-    <div class="kpi"><div class="lbl">Flip Tax (contingent)</div><div class="val muted">Contingent</div><div class="sub">Model in FY27 Planning when sale likely</div></div>
   </div>
 
   <div class="card">
     <h3>Pending Recoveries — 5C (Farley) <span>Amounts owed to 301-52 · secured by lien · update as details confirmed</span></h3>
     <table><thead><tr><th>Item</th><th>Category</th><th class="r">Est. Amount</th><th>Security</th><th>Expected Timing</th><th>Status</th></tr></thead><tbody>
       <tr>
-        <td><strong>5C Legal Fees — Recoverable (Braverman)</strong></td>
+        <td><strong>Potential Legal Fee Recovery</strong></td>
         <td>Legal recovery</td>
         <td class="r warn">TBD</td>
         <td>Lien on 5C shares</td>
@@ -1139,7 +1136,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td><span class="pill pw">Confirm amount with Braverman</span></td>
       </tr>
       <tr>
-        <td><strong>5C LL Remediation Fees</strong></td>
+        <td><strong>Potential LL Remediation Recovery</strong></td>
         <td>Capital recovery</td>
         <td class="r warn">TBD</td>
         <td>Lien on 5C shares</td>
@@ -1147,23 +1144,9 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td><span class="pill pw">Confirm amount with Halstead</span></td>
       </tr>
     </tbody></table>
-    <p class="note">Both items are secured by the co-op's lien on Farley's shares — recovery is expected but timing depends on the bankruptcy proceedings. Once amounts are confirmed, update TBD fields and note the expected receipt month for cash flow planning.</p>
+    <p class="note">Both items are secured by the co-op's lien on the unit's shares — recovery is expected but timing is subject to ongoing proceedings. Once amounts are confirmed with counsel, update TBD fields and note the expected receipt month for cash flow planning.</p>
   </div>
 
-  <div class="card">
-    <h3>Flip Tax — Contingent Inflow <span>Model in FY27 Planning when a sale is imminent</span></h3>
-    <table><thead><tr><th>Item</th><th>Basis</th><th class="r">Est. Amount</th><th>Destination</th><th>Timing</th><th>Action</th></tr></thead><tbody>
-      <tr>
-        <td><strong>Flip Tax — Unit(s) Listed for Sale</strong></td>
-        <td>% of sale price (per proprietary lease)</td>
-        <td class="r muted">Contingent</td>
-        <td>IDB MM #1545 (capital fund)</td>
-        <td>Upon closing — uncertain timing</td>
-        <td><span class="pill pm">Enter amount in FY27 Planning tab</span></td>
-      </tr>
-    </tbody></table>
-    <p class="note">Flip taxes flow into IDB MM (capital fund) per the proprietary lease. When a sale looks likely, enter the estimated flip tax in the <strong>FY27 Planning → Flip Tax Windfall</strong> input to see the impact on the year-end cash position and required maintenance rate.</p>
-  </div>
 </div>
 
 <!-- ===== LEGAL FEES ===== -->
@@ -1176,7 +1159,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     <div class="kpi"><div class="lbl">Variance</div><div class="val red">+$61,434</div><div class="sub">Farley + Three Ten access</div></div>
     <div class="kpi"><div class="lbl">Normalized Run Rate</div><div class="val warn">~$20–30K/yr</div><div class="sub">Typical for a building this size</div></div>
     <div class="kpi"><div class="lbl">Open AP (Braverman)</div><div class="val warn">$4,598</div><div class="sub">As of Jun 30, 2026</div></div>
-    <div class="kpi"><div class="lbl">FY27 Budget Rec.</div><div class="val">~$25–35K</div><div class="sub">Buffer for ongoing matters; model in FY27 Planning</div></div>
+    <div class="kpi"><div class="lbl">FY28 Budget Rec.</div><div class="val">~$25–35K</div><div class="sub">Buffer for ongoing matters; model in FY28 Planning</div></div>
   </div>
 
   <div class="card">
@@ -1247,7 +1230,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>Elevated (new matter)</td><td class="r warn">$40,000–$60,000</td><td>If a new litigation matter arises — flag to board immediately</td></tr>
       <tr><td>FY27 YTD (elevated)</td><td class="r red">~$63,522</td><td>Farley + Three Ten + general; not expected to repeat</td></tr>
     </tbody></table>
-    <p class="note">For FY27 budget modeling, use $30,000 as a conservative estimate in the <strong>FY27 Planning → Admin &amp; Legal</strong> input. Any new litigation or lender counsel engagement should trigger a board notification and budget revision.</p>
+    <p class="note">For FY28 budget modeling, use $30,000 as a conservative estimate in the <strong>FY28 Planning → Admin &amp; Legal</strong> input. Any new litigation or lender counsel engagement should trigger a board notification and budget revision.</p>
   </div>
 </div>
 
