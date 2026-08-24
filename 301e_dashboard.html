@@ -623,19 +623,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 <!-- ===== FY28 PLANNING ===== -->
 <div id="fy27" class="page">
     <div class="alert ai">ℹ️ <div>Set FY28 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Dec 2026 close from the FY27 Forecast tab. <strong>FY runs Feb–Jan · FY27 = Feb 2026–Jan 2027 (current) · FY28 = Feb 2027–Jan 2028 (planning year).</strong></div></div>
-    <div class="fc-result">
-      <div>
-        <div style="font-size:11px;color:var(--muted)">Required Maintenance Rate — FY28 (Feb 2027–Jan 2028)</div>
-        <div style="font-size:22px;font-weight:700;color:var(--accent)" id="fc27-rate">—</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px" id="fc27-total">Calculating…</div>
-        <div style="font-size:11px;color:var(--warn);margin-top:4px;display:none" id="fc27-floor">⚠ Floor applied — calculated need was below $3,750/unit/mo</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:11px;color:var(--muted)">vs. Current (~$4,522/unit/mo)</div>
-        <div style="font-size:16px;font-weight:700;margin-top:4px" id="fc27-delta">—</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">Adjust assumptions below</div>
-      </div>
-    </div>
+    <div style="display:none" id="fc27-rate"></div>
+    <div style="display:none" id="fc27-total"></div>
+    <div style="display:none" id="fc27-floor"></div>
+    <div style="display:none" id="fc27-delta"></div>
     <div class="card">
       <h3>FY28 Budget Assumptions <span>Adjust each driver — maintenance rate and projection update automatically</span></h3>
       <div class="fc-assumption-grid">
@@ -819,6 +810,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== LL11 TRACKING ===== -->
 <div id="ll11" class="page">
+  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
+    <span style="font-size:20px">⚠️</span>
+    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">This tab contains data and estimates that are pending validation with Halstead and building counsel. Figures should not be treated as final until confirmed. Outstanding items are noted throughout — please review before distributing externally.</span></div>
+  </div>
   <div class="alert aw">⚠️ <div><strong>Data as of APP6 (Mar 10, 2026).</strong> APP7+ not yet received — MSS contract balance of $112,566 includes $29,326 retainage; additional draws expected as work progresses. Braverman LL11 legal portion is an estimate — confirm % of YTD billings attributable to LL11 vs. Farley matter.</div></div>
 
   <div class="kpi-grid">
@@ -1119,6 +1114,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== RECOVERIES ===== -->
 <div id="recoveries" class="page">
+  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
+    <span style="font-size:20px">⚠️</span>
+    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">The amounts on this tab are estimates pending confirmation with Braverman Greenspoon and Halstead. They are not yet formally accrued and should not be communicated as established figures until counsel confirms amounts and timing.</span></div>
+  </div>
   <div class="alert aw">⚠️ <div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from the relevant unit (secured by lien on shares). Update as confirmed with Braverman and Halstead.</div></div>
 
   <div class="kpi-grid">
@@ -1154,6 +1153,10 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== LEGAL FEES ===== -->
 <div id="legal" class="page">
+  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
+    <span style="font-size:20px">⚠️</span>
+    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">Matter-level splits shown below are estimated — per-matter amounts have not been confirmed with Braverman Greenspoon. Total YTD figures ($63,522) are from MRI actuals; the allocation between matters is the treasurer's estimate pending counsel confirmation.</span></div>
+  </div>
   <div class="alert aw">⚠️ <div><strong>Legal fees are significantly elevated in FY27 (Feb–Jun 2026):</strong> YTD $63,522 vs $2,088 budget — driven by the Farley (5C) bankruptcy matter and Three Ten LL11 access negotiations. The peak is behind us; expect sharp normalization in H2 FY27 as Farley resolves.</div></div>
 
   <div class="kpi-grid">
@@ -1256,7 +1259,7 @@ const MAINT_EST=[66000,64500,64500,64000,64000,61000,65000,78239,115181,64010,81
 
 // ===== FORECASTING CONSTANTS — declared before chart code so a CDN failure cannot put them in the temporal dead zone =====
 const FC_MONTHS_26=['Jul 26','Aug 26','Sep 26','Oct 26','Nov 26','Dec 26'];
-const FC_MONTHS_27=['Jan 27','Feb 27','Mar 27','Apr 27','May 27','Jun 27','Jul 27','Aug 27','Sep 27','Oct 27','Nov 27','Dec 27'];
+const FC_MONTHS_27=['Feb 27','Mar 27','Apr 27','May 27','Jun 27','Jul 27','Aug 27','Sep 27','Oct 27','Nov 27','Dec 27','Jan 28'];
 const FC_UNITS=16;
 const FC_OPEN={capOne:112407,idbMM:332107,idbEscrow:30879,flagstar:85558};
 const FC_MAINT_MO=72351,FC_OTHER_MO=2500,FC_ASSESS_MO=22222;
@@ -1428,10 +1431,12 @@ function fcRecalc27(){
   const dEl=document.getElementById('fc27-delta');
   dEl.textContent=(delta>=0?'+':'')+fcFmt(delta)+'/unit ('+(pct>=0?'+':'')+pct.toFixed(1)+'%)';
   dEl.style.color=delta>0?'var(--warn)':delta<0?'var(--green)':'var(--muted)';
-  const util27A=[9000,8000,7000,5500,5000,5000,8500,8000,7000,5500,5000,5000];
+  // Monthly utility distribution Feb–Jan (FY28 = Feb 2027–Jan 2028)
+  const util27A=[8000,7000,5500,5000,5000,8500,8000,7000,5500,5000,5000,9000];
   const retaxQ=retax27/4;
   const escR=retax27/12;
-  const retaxMos=[0,0,0,retaxQ,0,0,retaxQ,0,0,retaxQ,0,0];
+  // RE tax quarterly payments fall in Apr(i2), Jul(i5), Oct(i8), Jan(i11) in FY28
+  const retaxMos=[0,0,retaxQ,0,0,retaxQ,0,0,retaxQ,0,0,retaxQ];
   let co=start.capOne,mm=start.idbMM+flip27,esc=start.idbEscrow;
   const totA=[],mmA=[];
   for(let i=0;i<12;i++){
@@ -1442,30 +1447,36 @@ function fcRecalc27(){
     mmA.push(Math.round(mm));
   }
   if(fc27Ch){try{fc27Ch.destroy();}catch(ex){}}
+  const fc27ChOpts={...fcChOpts,scales:{...fcChOpts.scales,y:{...fcChOpts.scales?.y,min:0,ticks:{color:'#8892a4',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#2e3347'}}}};
   try{fc27Ch=new Chart(document.getElementById('fc27chart'),{type:'line',data:{labels:FC_MONTHS_27,datasets:[
     {label:'Total Cash',data:totA,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:3},
     {label:'IDB MM',data:mmA,borderColor:'#38c172',backgroundColor:'transparent',tension:.3,borderWidth:2,pointRadius:3,borderDash:[4,2]},
     {label:'Buffer',data:Array(12).fill(buffer),borderColor:'#f5a623',backgroundColor:'transparent',borderDash:[6,3],borderWidth:1.5,pointRadius:0}
-  ]},options:fcChOpts});}catch(ex){console.warn('FY27 chart error:',ex.message);}
+  ]},options:fc27ChOpts});}catch(ex){console.warn('FY27 chart error:',ex.message);}
   const bRows=[
     {cat:'Maintenance Income',fy26:-(FC_MAINT_MO*12),fy27:-(maintMo*12),inc:true},
-    {cat:'Special Assessment (→ IDB MM)',fy26:-(FC_ASSESS_MO*12),fy27:assess27>0?-assess27:0,inc:true,note:assess27===0?'Final billing Jun 2026':'New board-approved assessment'},
+    {cat:'Special Assessment (→ IDB MM)',fy26:-(FC_ASSESS_MO*12),fy27:assess27>0?-assess27:0,inc:true,note:assess27===0?'Final billing Jun 2026':'New board-approved assessment',separator:true},
     {cat:'Real Estate Taxes',fy26:375000,fy27:retax27},
     {cat:'Payroll & Benefits',fy26:159000,fy27:payroll27},
     {cat:'Utilities',fy26:105000,fy27:util27},
     {cat:'Repairs & Maintenance',fy26:32000,fy27:rm27},
     {cat:'Admin & Legal',fy26:45000,fy27:admin27T},
     {cat:'Debt Service',fy26:111625,fy27:111625},
-    {cat:'Capital Projects',fy26:0,fy27:capex27},
   ];
-  const totE26=bRows.filter(r=>r.fy26>0).reduce((s,r)=>s+r.fy26,0);
-  const totE27=bRows.filter(r=>r.fy27>0).reduce((s,r)=>s+r.fy27,0);
+  const opRows=bRows;
+  const totE26=opRows.filter(r=>r.fy26>0).reduce((s,r)=>s+r.fy26,0);
+  const totE27=opRows.filter(r=>r.fy27>0).reduce((s,r)=>s+r.fy27,0);
   document.getElementById('fc27-budget-tbody').innerHTML=bRows.map(r=>{
     const d=r.fy27-r.fy26;
     const isZero=r.fy26===0&&r.fy27===0;
     const fy27disp=r.inc&&r.fy27===0?'<span class="muted">$0 — ended</span>':fcFmt(Math.abs(r.fy27))+(r.inc?' (income)':'');
-    return`<tr${r.note?` title="${r.note}"`:''}><td>${r.cat}${r.note?` <span class="muted" style="font-size:10px">(${r.note})</span>`:''}</td><td class="r muted">${fcFmt(Math.abs(r.fy26))}${r.inc?' (income)':''}</td><td class="r">${fy27disp}</td><td class="r ${isZero?'':d>0?'warn':'green'}">${isZero?'—':(d>=0?'+':'')+fcFmt(d)}</td><td class="r muted">${r.inc?'income':fcFmt(r.fy27/12/FC_UNITS)}</td></tr>`;
-  }).join('')+`<tr style="border-top:2px solid var(--border);font-weight:700"><td>Total Expenses</td><td class="r muted">${fcFmt(totE26)}</td><td class="r">${fcFmt(totE27)}</td><td class="r ${totE27>totE26?'warn':'green'}">${totE27>totE26?'+':''}${fcFmt(totE27-totE26)}</td><td class="r muted">${fcFmt(totE27/12/FC_UNITS)}</td></tr>`;
+    const row=`<tr${r.note?` title="${r.note}"`:''}><td>${r.cat}${r.note?` <span class="muted" style="font-size:10px">(${r.note})</span>`:''}</td><td class="r muted">${fcFmt(Math.abs(r.fy26))}${r.inc?' (income)':''}</td><td class="r">${fy27disp}</td><td class="r ${isZero?'':d>0?'warn':'green'}">${isZero?'—':(d>=0?'+':'')+fcFmt(d)}</td><td class="r muted">${r.inc?'income':fcFmt(r.fy27/12/FC_UNITS)}</td></tr>`;
+    const sep=r.separator?`<tr><td colspan="5" style="padding:0;border-bottom:2px solid var(--border)"></td></tr>`:'';
+    return row+sep;
+  }).join('')
+  +`<tr style="border-top:2px solid var(--border);font-weight:700"><td>Total Operating Expenses</td><td class="r muted">${fcFmt(totE26)}</td><td class="r">${fcFmt(totE27)}</td><td class="r ${totE27>totE26?'warn':'green'}">${totE27>totE26?'+':''}${fcFmt(totE27-totE26)}</td><td class="r muted">${fcFmt(totE27/12/FC_UNITS)}</td></tr>`
+  +`<tr style="background:rgba(79,142,247,.03)"><td colspan="5" style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:6px 9px;font-weight:700">Capital Spend — funded from IDB MM (not operating expenses)</td></tr>`
+  +`<tr><td>Capital Projects (LL11 draws + other)</td><td class="r muted">${fcFmt(112566)} <span style="font-size:10px">(LL11 est.)</span></td><td class="r">${capex27>0?fcFmt(capex27):'<span class="muted">$0 (none planned)</span>'}</td><td class="r muted">—</td><td class="r muted">IDB MM funded</td></tr>`;
   const scens=[{l:'No increase (hold $4,522)',r:4522},{l:'Modest +2%',r:Math.round(4522*1.02)},{l:'Moderate +5%',r:Math.round(4522*1.05)},{l:'Required (calculated)',r:Math.round(perUnit),h:true},{l:'+10%',r:Math.round(4522*1.10)}];
   document.getElementById('fc27-scenario-tbody').innerHTML=scens.map(s=>{
     const mo=s.r*FC_UNITS;
