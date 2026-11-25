@@ -6,259 +6,266 @@
 <title>301-52 Townhouse Corp — Treasurer Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d26;--surface2:#222636;--border:#2e3347;--accent:#4f8ef7;--green:#38c172;--red:#e74c3c;--warn:#f5a623;--text:#e2e8f0;--muted:#8892a4}
+:root{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f6f8fc;--border:#e4e8f0;--accent:#2f6fed;--green:#1f9d55;--red:#d64545;--warn:#c98200;--text:#1b2a4a;--muted:#6b7a90;--shadow:0 1px 2px rgba(16,24,40,.04),0 2px 8px rgba(16,24,40,.04)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px}
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
-header h1{font-size:18px;font-weight:600}
-.subtitle{color:var(--muted);font-size:12px;margin-top:2px}
-.badge{background:var(--accent);color:#fff;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600}
-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-.nav-group{display:flex;flex-direction:column;flex-shrink:0}
-.nav-tabs-inner{display:flex}
-.nav-grp-hdr{padding:5px 16px 3px;font-size:9px;text-transform:uppercase;letter-spacing:.9px;font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
-.nav-grp-hdr.monthly-grp{color:var(--accent);background:rgba(79,142,247,.05)}
-.nav-grp-hdr.analysis-grp{color:var(--muted);border-left:1px solid var(--border)}
-nav button{background:none;border:none;color:var(--muted);padding:11px 16px;cursor:pointer;font-size:13px;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
-nav button:hover{color:var(--text)}
-nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-nav button.monthly{background:rgba(79,142,247,.08);color:var(--text);border-radius:6px 6px 0 0}
-nav button.monthly:hover{background:rgba(79,142,247,.16)}
-nav button.monthly.active{background:rgba(79,142,247,.15)}
-.page{display:none;padding:20px 24px;max-width:1300px;margin:0 auto}
+body{background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+/* ---------- Layout ---------- */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:236px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:22px 14px 18px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#2f6fed,#5b8ef5);color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center;letter-spacing:.3px}
+.brand .b1{font-weight:700;font-size:14px;line-height:1.2}
+.brand .b2{font-size:11px;color:var(--muted);margin-top:2px}
+nav{display:flex;flex-direction:column;gap:2px}
+.nav-sec{font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#9aa6b8;padding:16px 10px 6px}
+nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;border-radius:9px;padding:9px 10px;color:#4a5a75;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;white-space:nowrap;transition:background .12s,color .12s}
+nav button svg{width:17px;height:17px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+nav button:hover{background:var(--surface2);color:var(--text)}
+nav button.active{background:#eaf1fe;color:var(--accent);font-weight:650;box-shadow:inset 3px 0 0 var(--accent)}
+.side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.6}
+.side-foot strong{color:var(--text)}
+.main{flex:1;min-width:0}
+.page{display:none;padding:28px 34px 40px;max-width:1320px;margin:0 auto}
 .page.active{display:block}
-.section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h1{font-size:28px;font-weight:800;letter-spacing:-.4px;line-height:1.1}
+.page-head p{color:var(--muted);font-size:13px;margin-top:6px}
+.period{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap}
+.period::before{content:'●';color:var(--green);margin-right:6px;font-size:9px;vertical-align:1px}
+/* ---------- Components ---------- */
+.section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:26px 0 12px}
 .section-head:first-child{margin-top:0}
-.alert{padding:11px 14px;border-radius:8px;margin-bottom:10px;font-size:13px;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
-.aw{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--warn)}
-.as{background:rgba(56,193,114,.1);border:1px solid rgba(56,193,114,.3);color:var(--green)}
-.ai{background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.3);color:var(--accent)}
-.ar{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:var(--red)}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}
-.kpi .lbl{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
-.kpi .val{font-size:21px;font-weight:700}
-.kpi .chg{font-size:11px;margin-top:2px}.up{color:var(--green)}.dn{color:var(--red)}.wn{color:var(--warn)}
-.kpi .sub{color:var(--muted);font-size:11px;margin-top:2px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
-@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
-.card h3{font-size:13px;font-weight:600;margin-bottom:12px}
-.card h3 span{color:var(--muted);font-weight:400;font-size:12px;margin-left:6px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card h3{font-size:15px;font-weight:700;margin-bottom:14px;letter-spacing:-.1px}
+.card h3 span{color:var(--muted);font-weight:500;font-size:12px;margin-left:6px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-head h3{margin-bottom:0}
+.link-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;text-decoration:none}
+.link-btn:hover{border-color:var(--accent);color:var(--accent)}
+.alert{padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:13px;display:flex;align-items:flex-start;gap:10px;line-height:1.55;color:var(--text)}
+.aw{background:#fff8e8;border:1px solid #f6e0a8}
+.as{background:#eaf7ef;border:1px solid #bfe5cd}
+.ai{background:#eef4ff;border:1px solid #cddcfb}
+.ar{background:#fdeeee;border:1px solid #f4c7c7}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.kpi .lbl{color:var(--muted);font-size:11.5px;font-weight:600;margin-bottom:8px}
+.kpi .val{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.kpi .chg{font-size:11.5px;margin-top:6px;font-weight:600}
+.kpi .sub{color:var(--muted);font-size:11.5px;margin-top:4px;line-height:1.4}
+.up{color:var(--green)}.dn{color:var(--red)}.wn{color:var(--warn)}
+.chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.chip.g{background:#e3f5ea;color:var(--green)}.chip.r{background:#fbe5e5;color:var(--red)}.chip.a{background:#fdf1d8;color:#a86c00}.chip.b{background:#e6eefd;color:var(--accent)}.chip.m{background:#eef1f5;color:var(--muted)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.g21{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px}
+.g2>.card,.g3>.card,.g21>.card{margin-bottom:0}
 .ch200{position:relative;height:200px}.ch260{position:relative;height:260px}.ch300{position:relative;height:300px}.ch180{position:relative;height:180px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:7px 9px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
-td{padding:7px 9px;border-bottom:1px solid rgba(46,51,71,.4);vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:9px 10px;color:var(--muted);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--surface2)}
+td{padding:9px 10px;border-bottom:1px solid #eef1f6;vertical-align:middle;line-height:1.45}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.02)}
+tbody tr:hover td{background:#fafbfe}
 .r{text-align:right}.c{text-align:center}
 .green{color:var(--green)}.red{color:var(--red)}.warn{color:var(--warn)}.muted{color:var(--muted)}
-.pill{display:inline-block;padding:2px 7px;border-radius:9px;font-size:10px;font-weight:600}
-.pg{background:rgba(56,193,114,.15);color:var(--green)}
-.pr{background:rgba(231,76,60,.15);color:var(--red)}
-.pw{background:rgba(245,166,35,.15);color:var(--warn)}
-.pb{background:rgba(79,142,247,.15);color:var(--accent)}
-.pm{background:rgba(136,146,164,.15);color:var(--muted)}
-.note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6}
-/* Capital Planning */
-.ctrl-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px}
-.ctrl{display:flex;flex-direction:column;gap:4px}
-.ctrl label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.ctrl input[type=number]{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:5px;width:100px;font-size:13px}
-.run-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;align-self:flex-end}
-.proj-tbl input[type=text]{background:none;border:none;color:var(--text);width:100%;font-size:12px;padding:0}
-.proj-tbl input[type=number]{background:none;border:1px solid transparent;color:var(--text);width:70px;font-size:12px;padding:2px 4px;border-radius:3px;text-align:right}
-.proj-tbl input[type=number]:focus{border-color:var(--border);outline:none;background:var(--surface2)}
-.proj-tbl select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:2px 5px;border-radius:4px;font-size:11px}
-.proj-tbl input[type=checkbox]{width:14px;height:14px;cursor:pointer}
-.add-proj-btn{background:none;border:1px dashed var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;margin-top:8px;width:100%}
-.add-proj-btn:hover{border-color:var(--accent);color:var(--accent)}
-.del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:0 4px;opacity:.6}
-.del-btn:hover{opacity:1}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.pg{background:#e3f5ea;color:var(--green)}.pr{background:#fbe5e5;color:var(--red)}.pw{background:#fdf1d8;color:#a86c00}.pb{background:#e6eefd;color:var(--accent)}.pm{background:#eef1f5;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.65}
+details.more{margin-top:10px;border-top:1px dashed var(--border);padding-top:8px}
+details.more summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--accent);list-style:none;user-select:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:'▸ ';}
+details.more[open] summary::before{content:'▾ ';}
+.banner-validate{background:#fff8e8;border:1px solid #f6e0a8;border-left:4px solid var(--warn);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12.5px;line-height:1.55}
+.banner-validate strong{color:#8a5a00}
+/* Overview widgets */
+.takeaways{display:flex;flex-direction:column;gap:14px}
+.tk{display:flex;gap:12px;align-items:flex-start}
+.tk .dot{width:9px;height:9px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.tk b{display:block;font-size:13.5px;margin-bottom:2px}
+.tk p{font-size:12.5px;color:var(--muted);line-height:1.5}
+.status-list{display:flex;flex-direction:column}
+.status-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eef1f6;font-size:13px}
+.status-row:last-child{border-bottom:none}
+.status-row small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.rings{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center}
+.ring{--p:50;--c:var(--accent);width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#edf0f5 0);display:grid;place-items:center;margin:0 auto 10px}
+.ring::before{content:'';grid-area:1/1;width:92px;height:92px;border-radius:50%;background:#fff}
+.ring span{grid-area:1/1;position:relative;font-size:20px;font-weight:800;letter-spacing:-.4px}
+.ring-lbl{font-size:12.5px;font-weight:700}
+.ring-sub{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+.bar-row{margin-bottom:14px}
+.bar-row:last-child{margin-bottom:0}
+.bar-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
+.bar-top b{font-weight:700}
+.bar{height:8px;border-radius:8px;background:#edf0f5;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:8px}
+/* Legacy components restyled */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-.stat{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
-.stat .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.stat .sv{font-size:18px;font-weight:700;margin-top:4px}
-.stat .sn{font-size:11px;color:var(--muted);margin-top:2px}
-/* Advisor */
-.scorecard{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-@media(max-width:900px){.scorecard{grid-template-columns:1fr 1fr}}
-.score-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px}
-.score-card .sc-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-.score-card .sc-rating{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
-.sc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.sc-note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
-.acc-item{border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
-.acc-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;background:var(--surface);user-select:none}
-.acc-head:hover{background:var(--surface2)}
-.acc-head .ah-left{display:flex;align-items:center;gap:10px}
-.acc-head .ah-tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
-.acc-head .ah-title{font-size:13px;font-weight:600}
-.acc-body{display:none;padding:14px 16px;background:var(--surface);border-top:1px solid var(--border);font-size:13px;line-height:1.7;color:var(--muted)}
+.scorecard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.score-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.score-card .sc-label{font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.score-card .sc-rating{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.sc-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sc-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.55}
+.acc-item{border:none}
+.acc-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.acc-body{display:none;padding-top:12px;font-size:13px;line-height:1.7;color:var(--muted)}
 .acc-body.open{display:block}
-.acc-body strong{color:var(--text)}
-.acc-body ul{padding-left:16px;margin:6px 0}
-.acc-body li{margin-bottom:4px}
-.acc-body .data-table{margin:10px 0;background:var(--surface2);border-radius:6px;padding:10px;font-size:12px}
-.obs-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;border-left:3px solid var(--accent)}
-/* Inner tabs */
-.inner-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
-.inner-tab-btn{background:none;border:none;color:var(--muted);padding:9px 18px;cursor:pointer;font-size:12px;font-weight:600;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;letter-spacing:.5px}
-.inner-tab-btn:hover{color:var(--text)}
-.inner-tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.inner-page{display:none}
-.inner-page.active{display:block}
+.obs-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;border-left:4px solid var(--accent);box-shadow:var(--shadow)}
+.fwd-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;border-left:4px solid var(--border);box-shadow:var(--shadow)}
+.fwd-card.priority{border-left-color:var(--warn)}.fwd-card.opportunity{border-left-color:var(--green)}.fwd-card.watch{border-left-color:var(--accent)}
+.fwd-card h4{font-size:13px;font-weight:700;margin-bottom:5px}
+.fwd-card p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.fwd-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 /* Forecasting inputs */
-.fc-toggle-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.fc-toggle-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
 .fc-toggle-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.fc-toggle-header label{font-weight:600;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:8px}
-.fc-inputs{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.fc-input-group{display:flex;flex-direction:column;gap:3px}
-.fc-input-group label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-.fc-input-group input,.fc-input-group select{background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 8px;font-size:12px;width:130px}
-.fc-assumption-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:14px}
-.fc-assumption{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px}
-.fc-assumption .fa-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.fc-assumption .fa-current{font-size:10px;color:var(--muted);margin-bottom:6px}
+.fc-toggle-header label{font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.fc-inputs{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.fc-input-group{display:flex;flex-direction:column;gap:4px}
+.fc-input-group label{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.fc-input-group input,.fc-input-group select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:7px 9px;font-size:12.5px;width:140px}
+.fc-assumption-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:6px}
+.fc-assumption{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px}
+.fc-assumption .fa-label{font-size:11px;color:var(--text);font-weight:700;margin-bottom:3px}
+.fc-assumption .fa-current{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.45}
 .fc-assumption input[type=range]{width:100%;accent-color:var(--accent)}
-.fc-result{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.3);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-/* Light scorecard (stands out on dark bg) */
-.score-card-light{background:#eef2f7;border-color:#c8d4e8}
-.score-card-light .sc-label{color:#4a5568}
-.score-card-light .sc-note{color:#64748b}
-.score-card-light .sc-rating span{font-weight:700}
-/* Forward looking cards */
-.fwd-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;border-left:3px solid var(--border)}
-.fwd-card.priority{border-left-color:var(--warn)}
-.fwd-card.opportunity{border-left-color:var(--green)}
-.fwd-card.watch{border-left-color:var(--accent)}
-.fwd-card h4{font-size:12px;font-weight:700;margin-bottom:5px}
-.fwd-card p{font-size:12px;color:var(--muted);line-height:1.6}
-/* Mobile: right-edge fade on nav to signal off-screen tabs */
-nav{position:relative}
-nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;border-radius:0 6px 6px 0}
-/* Print stylesheet — light background, dark text */
+.fc-assumption input[type=number]{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:8px!important}
+input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px}
+/* ---------- Responsive ---------- */
+@media(max-width:1100px){.rings{grid-template-columns:repeat(2,1fr)}.g21{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .layout{display:block}
+  .sidebar{position:sticky;top:0;z-index:10;width:auto;height:auto;flex-direction:row;align-items:center;padding:8px 10px;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto}
+  .brand{padding:0 10px 0 0}.brand .b2{display:none}
+  nav{flex-direction:row}.nav-sec,.side-foot{display:none}
+  nav button.active{box-shadow:inset 0 -3px 0 var(--accent)}
+  .page{padding:18px 14px 30px}
+  .g2,.g3,.scorecard,.fwd-grid{grid-template-columns:1fr}
+}
+/* ---------- Print ---------- */
 @media print{
-  :root{--bg:#fff;--surface:#f8f9fa;--surface2:#eef2f7;--border:#d0d7e3;--text:#1a202c;--muted:#4a5568;--accent:#1d4ed8;--green:#166534;--red:#991b1b;--warn:#92400e}
-  body{background:#fff;color:#1a202c}
-  nav,header .badge{display:none}
-  .page{display:block!important;break-inside:avoid}
-  .section-head{background:#eef2f7;color:#1a202c;border-left:3px solid #1d4ed8}
-  .card{border:1px solid #d0d7e3;background:#fff;break-inside:avoid}
+  .sidebar{display:none}.layout{display:block}
+  .page{display:block!important;break-before:page;padding:0}
+  .card,.kpi{box-shadow:none;break-inside:avoid}
+  details.more{display:block}details.more>*{display:block}
   canvas{max-height:180px}
-  .pill.pg{background:#dcfce7;color:#166534;border:1px solid #166534}
-  .pill.pw{background:#fef9c3;color:#92400e;border:1px solid #92400e}
-  .pill.pb{background:#dbeafe;color:#1d4ed8;border:1px solid #1d4ed8}
-  .alert{border:1px solid #d0d7e3;background:#f8f9fa}
-  .score-card-light{background:#f0f4ff;border:1px solid #c8d4e8}
 }
 </style>
 </head>
 <body>
-<header>
-  <div><h1>301-52 Townhouse Corp</h1><div class="subtitle">301 East 52nd St, NYC &nbsp;·&nbsp; Treasurer Dashboard &nbsp;·&nbsp; 16 Units &nbsp;·&nbsp; Managed by Halstead</div></div>
-  <span class="badge">Sep 2026</span>
-</header>
-<nav>
-  <div class="nav-group">
-    <div class="nav-grp-hdr monthly-grp" id="navMonthLabel">301-52 Financials as of Sep 2026</div>
-    <div class="nav-tabs-inner">
-      <button class="monthly active" onclick="showPage('overview',this)">Overview</button>
-      <button class="monthly" onclick="showPage('trends',this)">Trends</button>
-      <button class="monthly" onclick="showPage('cash',this)">Cash Position</button>
-      <button class="monthly" onclick="showPage('income',this)">Income &amp; Receivables</button>
-      <button class="monthly" onclick="showPage('expenses',this)">Expenses &amp; Payables</button>
-    </div>
-  </div>
-  <div class="nav-group">
-    <div class="nav-grp-hdr analysis-grp">Assessment of our Financials</div>
-    <div class="nav-tabs-inner">
-      <button onclick="showPage('advisor',this)">Health Analysis</button>
-      <button onclick="showPage('fy26',this)">FY27 Forecast</button>
-      <button onclick="showPage('fy27',this);fcRecalc27()">FY28 Planning</button>
-      <button onclick="showPage('vendors',this)">Vendor Register</button>
-    </div>
-  </div>
-  <div class="nav-group">
-    <div class="nav-grp-hdr analysis-grp">Detailed Analysis</div>
-    <div class="nav-tabs-inner">
-      <button onclick="showPage('ll11',this)">LL11 Tracking</button>
-      <button onclick="showPage('recoveries',this)">Recoveries</button>
-      <button onclick="showPage('legal',this)">Legal Fees</button>
-    </div>
-  </div>
-</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">301</div><div><div class="b1">301-52 Townhouse</div><div class="b2">Treasurer Dashboard</div></div></div>
+  <nav>
+    <div class="nav-sec">Monthly report</div>
+    <button class="active" onclick="showPage('overview',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</button>
+    <button onclick="showPage('trends',this)"><svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>Trends</button>
+    <button onclick="showPage('cash',this)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>Cash Position</button>
+    <button onclick="showPage('income',this)"><svg viewBox="0 0 24 24"><path d="M12 19V5"/><polyline points="6 11 12 5 18 11"/></svg>Income &amp; Receivables</button>
+    <button onclick="showPage('expenses',this)"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><polyline points="6 13 12 19 18 13"/></svg>Expenses &amp; Payables</button>
+    <div class="nav-sec">Planning &amp; analysis</div>
+    <button onclick="showPage('advisor',this)"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>Health Analysis</button>
+    <button onclick="showPage('fy26',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>FY27 Forecast</button>
+    <button onclick="showPage('fy27',this);fcRecalc27()"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>FY28 Planning</button>
+    <button onclick="showPage('vendors',this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>Vendor Register</button>
+    <div class="nav-sec">Deep dives</div>
+    <button onclick="showPage('ll11',this)"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="9" y2="14.01"/><line x1="15" y1="14" x2="15" y2="14.01"/><path d="M10 22v-4h4v4"/></svg>LL11 Tracking</button>
+    <button onclick="showPage('recoveries',this)"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></svg>Recoveries</button>
+    <button onclick="showPage('legal',this)"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0z"/><path d="M19 7l-3 7a3.5 3.5 0 0 0 6 0z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>Legal Fees</button>
+  </nav>
+  <div class="side-foot">Data as of <strong id="navMonthLabel">Sep 2026</strong><br>Source: Halstead MRI monthly report<br>301 East 52nd St · 16 units<br>FY runs Feb–Jan</div>
+</aside>
+<main class="main">
 
 <!-- ===== OVERVIEW ===== -->
 <div id="overview" class="page active">
+  <div class="page-head"><div><h1>Overview</h1><p>Month-end position and the items that need board attention</p></div><span class="period">Sep 30, 2026 · FY27 month 8 of 12</span></div>
 
-  <div class="card" style="border-left:3px solid var(--accent)">
-    <h3>Sep 2026 — What Changed This Month</h3>
-    <p style="font-size:13px;line-height:1.6;color:var(--text)">September was the strongest cash month of FY27. Total cash rose $75,681 to <strong>$700,333</strong>, a new FY27 high. Two things drove it. First, the $22,450 prior-management balance (PMB), unpaid since June, was <strong>collected in full on Sept 30</strong>, along with October maintenance paid early ($6,533). AR went from $22,448 owed to a <strong>$6,769 credit</strong> (prepayment). Second, disbursements were light at $29,714, $4,484 under the monthly budget, with no RE tax, insurance or legal payments. $33,000 moved from operating into IDB Escrow, which now holds $132,402: enough for the October RE tax quarterly (~$93.5K) with ~$39K left toward January. IDB MM grew by interest only, to $334,751; there were no LL11 or other capital draws. No legal fees were paid in September, but $2,490 of new Braverman invoices (dated 9/1) are open in AP. YTD legal is $76,919 paid ($79,409 including open invoices) against a $5,500 annual budget. Open AP rose to $6,123. <em>Caveat: about $29K of September's cash came from one-time items (the PMB collection and the October prepayment), and the October RE tax will take ~$93.5K out of total cash next month.</em></p>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="lbl">Total Cash</div><div class="val">$700,333</div><div class="chg up">▲ $75,681 vs Aug · FY27 high</div></div>
+    <div class="kpi"><div class="lbl">Capital &amp; Covenant Reserves</div><div class="val">$420,313</div><div class="sub">IDB MM $334,751 + Flagstar $85,562</div></div>
+    <div class="kpi"><div class="lbl">RE Tax Escrow</div><div class="val">$132,402</div><div class="chg up">Covers Oct quarterly (~$93.5K)</div></div>
+    <div class="kpi"><div class="lbl">Sep Income</div><div class="val">$105,394</div><div class="sub">Incl. $22,450 one-time PMB collection</div></div>
+    <div class="kpi"><div class="lbl">Sep Expenses</div><div class="val">$29,714</div><div class="chg up">$4,484 under budget</div></div>
+    <div class="kpi"><div class="lbl">Accounts Receivable</div><div class="val green">($6,769)</div><div class="sub">Credit (prepaid) · all accounts current</div></div>
   </div>
 
-  <div class="card" style="border-left:3px solid var(--warn)">
-    <h3>⚡ Board Decisions This Meeting</h3>
-    <table><thead><tr><th>Item</th><th>Context</th><th>Decision / Action Needed</th></tr></thead><tbody>
-      <tr><td><strong>Unit AR — PMB collected in full ($22,450)</strong></td><td>The balance, unpaid since June, was received 9/30/26 together with current charges and October maintenance paid early. AR is now a $6,769 credit. No shareholder account has a balance due.</td><td><strong>Close the enforcement item.</strong> Because a bankruptcy matter is still open, ask counsel to confirm the receipt is final (not subject to court review) before the board treats it as settled.</td></tr>
-      <tr><td><strong>October RE Tax Quarterly (~$93.5K)</strong></td><td>IDB Escrow is $132,402 after a $33,000 transfer in September. That covers October in full and leaves ~$39K toward the January quarterly.</td><td>For information. Confirm Halstead pays from IDB Escrow on time.</td></tr>
-      <tr><td><strong>Legal Fees — $76,919 YTD paid vs. $5,500 budget</strong></td><td>No legal payments in September. $2,490 of new Braverman invoices open (9/1: $540 bankruptcy matter + $1,950 general), so $79,409 incurred YTD.</td><td>Ask Braverman for a cost estimate for the rest of FY27. Confirm Podell Schwartz certiorari engagement terms and fee structure.</td></tr>
-      <tr><td><strong>LL11 — APP7 still not received</strong></td><td>Last draw was APP6 (Mar 10, 2026). MSS balance is $112,566, including $29,326 retainage. No LL11 capital spend in the September MRI.</td><td>Ask Halstead / MSS for status and expected APP7 timing. See <a href="#" onclick="showPage('ll11',document.querySelector('[onclick*=ll11]'));return false" style="color:var(--accent)">LL11 Tracking</a> tab.</td></tr>
-      <tr><td><strong>FY28 Maintenance Rate</strong></td><td>Current billing is $74,783/mo (~$4,674/unit average across 16 units). The FY28 Planning tab calculates the required rate from budget assumptions.</td><td>Use the FY28 Planning tab to run board scenarios; vote on a rate adjustment for Feb 2027.</td></tr>
+  <div class="g21">
+    <div class="card">
+      <h3>Key takeaways</h3>
+      <div class="takeaways">
+        <div class="tk"><span class="dot" style="background:var(--green)"></span><div><b>Arrears fully collected</b><p>The $22,450 prior-management balance was paid on 9/30, together with October maintenance paid early. AR is now a $6,769 credit. Because a bankruptcy matter is still open, counsel should confirm the payment is final.</p></div></div>
+        <div class="tk"><span class="dot" style="background:var(--green)"></span><div><b>October RE tax is covered</b><p>Escrow holds $132,402 against ~$93.5K due, leaving ~$39K to carry toward the January quarterly.</p></div></div>
+        <div class="tk"><span class="dot" style="background:var(--red)"></span><div><b>Legal is still the budget breaker</b><p>$76,919 paid YTD vs. a $5,500 annual budget, with $2,490 more invoiced. Admin is $61,543 over its full-year budget.</p></div></div>
+        <div class="tk"><span class="dot" style="background:var(--warn)"></span><div><b>LL11 billing has stalled</b><p>There has been no MSS draw since APP6 (Mar 2026). $112,566 is still to be paid from the capital fund.</p></div></div>
+        <div class="tk"><span class="dot" style="background:#9aa6b8"></span><div><b>Read September's cash in context</b><p>~$29K of the increase is one-time (PMB + prepayment), and the October RE tax will draw ~$93.5K next month.</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Health status</h3><a href="#" class="link-btn" onclick="showPage('advisor',document.querySelector('[onclick*=advisor]'));return false">View analysis</a></div>
+      <div class="status-list">
+        <div class="status-row"><div>Cash position<small>$700K · FY27 high</small></div><span class="chip g">Excellent</span></div>
+        <div class="status-row"><div>Capital fund<small>~$205–217K left after LL11</small></div><span class="chip b">Strong</span></div>
+        <div class="status-row"><div>Receivables<small>PMB paid 9/30</small></div><span class="chip g">Cleared</span></div>
+        <div class="status-row"><div>Legal exposure<small>14× annual budget</small></div><span class="chip r">Elevated</span></div>
+        <div class="status-row"><div>LL11 compliance<small>77.89% complete per APP6</small></div><span class="chip a">In progress</span></div>
+        <div class="status-row"><div>Maintenance rate<small>FY28 vote needed</small></div><span class="chip b">Decision due</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>FY27 at a glance</h3>
+    <div class="rings">
+      <div><div class="ring" style="--p:67;--c:var(--accent)"><span>67%</span></div><div class="ring-lbl">FY27 budget spent</div><div class="ring-sub">$598,953 of $891,087<br>67% of the year elapsed</div></div>
+      <div><div class="ring" style="--p:94;--c:var(--warn)"><span>94%</span></div><div class="ring-lbl">Reserves vs. 6-month ideal</div><div class="ring-sub">Gross $420K vs $446K<br>69% net of LL11 draws</div></div>
+      <div><div class="ring" style="--p:100;--c:var(--green)"><span>142%</span></div><div class="ring-lbl">Oct RE tax coverage</div><div class="ring-sub">Escrow $132K vs ~$93.5K due</div></div>
+      <div><div class="ring" style="--p:100;--c:var(--green)"><span>100%</span></div><div class="ring-lbl">Arrears recovered</div><div class="ring-sub">From the $156,592 peak (Jan 2026)</div></div>
+    </div>
+  </div>
+
+  <div class="g21">
+    <div class="card"><h3>Income vs. expenses <span>Oct 2025 – Sep 2026 · expense spikes = quarterly RE tax</span></h3><div class="ch260"><canvas id="ov_incExp"></canvas></div></div>
+    <div class="card">
+      <h3>Cash by account <span>Sep 30, 2026</span></h3>
+      <div class="bar-row"><div class="bar-top"><span>IDB Money Market (capital)</span><b>$334,751</b></div><div class="bar"><i style="width:47.8%;background:var(--accent)"></i></div></div>
+      <div class="bar-row"><div class="bar-top"><span>Capital One (operating)</span><b>$147,618</b></div><div class="bar"><i style="width:21.1%;background:#7aa2f5"></i></div></div>
+      <div class="bar-row"><div class="bar-top"><span>IDB Escrow (RE tax)</span><b>$132,402</b></div><div class="bar"><i style="width:18.9%;background:var(--warn)"></i></div></div>
+      <div class="bar-row"><div class="bar-top"><span>Flagstar (covenant)</span><b>$85,562</b></div><div class="bar"><i style="width:12.2%;background:var(--green)"></i></div></div>
+      <p class="note">Bar = share of total cash ($700,333). The IDB MM capital fund is earmarked for capital projects and Flagstar is a lender-required minimum, so day-to-day liquidity sits in Cap One.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Financial decisions for next Board meeting</h3>
+    <table><thead><tr><th style="width:24%">Item</th><th>Context</th><th style="width:32%">Action</th><th>Type</th></tr></thead><tbody>
+      <tr><td><strong>PMB arrears collected ($22,450)</strong></td><td>Paid 9/30 with October prepaid; no account has a balance due.</td><td>Close the enforcement item once counsel confirms the receipt is final (open bankruptcy).</td><td><span class="pill pb">Confirm</span></td></tr>
+      <tr><td><strong>October RE tax (~$93.5K)</strong></td><td>Escrow $132,402 after a $33,000 Sept transfer.</td><td>Confirm Halstead pays from escrow on time.</td><td><span class="pill pm">Info</span></td></tr>
+      <tr><td><strong>Legal fees ($76,919 YTD)</strong></td><td>$2,490 open AP; $79,409 incurred vs $5,500 budget.</td><td>Ask Braverman for a rest-of-year estimate; confirm Podell Schwartz fee terms.</td><td><span class="pill pr">Action</span></td></tr>
+      <tr><td><strong>LL11: APP7 not received</strong></td><td>Last draw Mar 2026; $112,566 MSS balance incl. $29,326 retainage.</td><td>Ask Halstead / MSS for status and APP7 timing.</td><td><span class="pill pr">Action</span></td></tr>
+      <tr><td><strong>FY28 maintenance rate</strong></td><td>Billing $74,783/mo (~$4,674/unit avg).</td><td>Run scenarios in FY28 Planning; vote for Feb 2027.</td><td><span class="pill pw">Vote</span></td></tr>
     </tbody></table>
   </div>
 
-  <div class="card" style="border-left:3px solid var(--muted)">
-    <h3>📋 Open Items <span>TBDs requiring follow-up before they fall through</span></h3>
+  <div class="card">
+    <h3>Open Financial Items for the building <span>follow-ups so nothing falls through</span></h3>
     <table><thead><tr><th>Item</th><th>Status</th><th>Owner</th><th>Target</th></tr></thead><tbody>
-      <tr><td>Confirm with counsel that the Sep 30 PMB receipt ($22,450) is final, given the open bankruptcy matter</td><td><span class="pill pw">New</span></td><td>Treasurer + Braverman</td><td>Next meeting</td></tr>
-      <tr><td>Cowley Engineering: Aug AP showed $1,764. In Sep, $900 was paid and coded to <em>operating</em> engineering fees (not LL11 capital). The remaining $864 is no longer on AP. Confirm whether it was paid or credited, and confirm the coding.</td><td><span class="pill pw">New</span></td><td>Halstead</td><td>Oct report</td></tr>
-      <tr><td>Aged AP: CC Controlled Combustion $757 (open since Mar 2026) and DFH Security $1,259 (open since Jun 2026). Pay or dispute.</td><td><span class="pill pr">Aged</span></td><td>Halstead</td><td>Oct report</td></tr>
-      <tr><td>LL11 legal split (Braverman vs. Fox Rothschild): confirm LL11 vs. general allocation</td><td><span class="pill pw">TBD</span></td><td>Halstead</td><td>Next invoice</td></tr>
-      <tr><td>Three Ten $8,463 access payment: confirm reclassification to LL11 capital spend</td><td><span class="pill pr">Overdue</span></td><td>Treasurer + Halstead</td><td>Was Jul 2026</td></tr>
-      <tr><td>Reserve study: commission alongside LL11 closeout</td><td><span class="pill pw">To schedule</span></td><td>Board</td><td>Q4 2026</td></tr>
+      <tr><td>Counsel to confirm the 9/30 PMB receipt ($22,450) is final</td><td><span class="pill pw">New</span></td><td>Treasurer + Braverman</td><td>Next meeting</td></tr>
+      <tr><td>Cowley Engineering: $864 of the Aug $1,764 balance is unexplained; the $900 payment was coded to operating, not LL11</td><td><span class="pill pw">New</span></td><td>Halstead</td><td>Oct report</td></tr>
+      <tr><td>Aged AP: CC Controlled Combustion $757 (since Mar) and DFH $1,259 (since Jun). Pay or dispute.</td><td><span class="pill pr">Aged</span></td><td>Halstead</td><td>Oct report</td></tr>
+      <tr><td>LL11 legal split (Braverman vs. Fox Rothschild): confirm allocation</td><td><span class="pill pw">TBD</span></td><td>Halstead</td><td>Next invoice</td></tr>
+      <tr><td>Three Ten $8,463 access payment: reclassify to LL11 capital</td><td><span class="pill pr">Overdue</span></td><td>Treasurer + Halstead</td><td>Was Jul 2026</td></tr>
+      <tr><td>Reserve study: commission alongside LL11 closeout</td><td><span class="pill pm">To schedule</span></td><td>Board</td><td>Q4 2026</td></tr>
     </tbody></table>
   </div>
-
-  <div class="section-head">💰 Cash Position</div>
-  <div class="kpi-grid">
-    <div class="kpi"><div class="lbl">Total Cash</div><div class="val">$700,333</div><div class="chg up">↑ $75,681 vs Aug · FY27 high</div><div class="sub">Incl. ~$29K one-time (PMB + Oct prepay)</div></div>
-    <div class="kpi"><div class="lbl">Capital Fund (IDB MM)</div><div class="val">$334,751</div><div class="sub">+$864 interest only, no draws</div></div>
-    <div class="kpi"><div class="lbl">Capital &amp; Covenant Reserves</div><div class="val green">$420,313</div><div class="sub">IDB MM (capital) + Flagstar (covenant)</div></div>
-    <div class="kpi"><div class="lbl">RE Tax Reserve (IDB Escrow)</div><div class="val green">$132,402</div><div class="chg up">Covers Oct quarterly (~$93.5K)</div><div class="sub">+$33,000 transfer from operating</div></div>
-    <div class="kpi"><div class="lbl">Operating (Cap One)</div><div class="val">$147,618</div><div class="sub">Day-to-day checking · +$41,550</div></div>
-  </div>
-  <div class="g2">
-    <div class="card"><h3>Cash by Account — Sep 2026</h3><div class="ch200"><canvas id="ov_cashPie"></canvas></div></div>
-    <div class="card"><h3>Monthly Net Cash Change <span>Oct 2025 – Sep 2026</span></h3><div class="ch200"><canvas id="ov_netBar"></canvas></div></div>
-  </div>
-
-  <div class="section-head">📈 Income &amp; Receivables</div>
-  <div class="kpi-grid">
-    <div class="kpi"><div class="lbl">Monthly Income</div><div class="val">$105,394</div><div class="chg up">Incl. $22,450 PMB collection</div><div class="sub">One-time; normal month ~$76–77K</div></div>
-    <div class="kpi"><div class="lbl">Maintenance Receipts</div><div class="val">$81,317</div><div class="sub">Billed $74,783 + $6,533 Oct prepayment</div></div>
-    <div class="kpi"><div class="lbl">Capital Assessments</div><div class="val muted">$0</div><div class="sub">Ended Jun 2026 · YTD $119,169</div></div>
-    <div class="kpi"><div class="lbl">AR Balance</div><div class="val green">($6,769)</div><div class="chg up">Cleared, now a credit (prepaid)</div><div class="sub">PMB collected in full 9/30</div></div>
-  </div>
-  <div class="card"><h3>12-Month Income <span>Oct 2025 – Sep 2026 · Maintenance + Other</span></h3><div class="ch180"><canvas id="ov_incBar"></canvas></div></div>
-
-  <div class="section-head">📋 Expenses &amp; Payables</div>
-  <div class="alert ai">ℹ️ <div><strong>Sep 2026:</strong> Expenses were $29,714, the lightest month of FY27 and $4,484 under the monthly budget. No RE tax, insurance or legal payments. Payroll $11,403 · utilities $3,111 · repairs $1,010 · admin $4,887 (mgmt fee $3,750 + Cowley engineering $900) · debt service $9,302. Open AP rose to $6,123, including new Braverman invoices ($2,490) and Budget Plumbing ($1,731, no-hot-water call).</div></div>
-  <div class="kpi-grid">
-    <div class="kpi"><div class="lbl">Monthly Expenses</div><div class="val green">$29,714</div><div class="sub">$4,484 under Sep budget</div></div>
-    <div class="kpi"><div class="lbl">Payroll &amp; Benefits</div><div class="val">$11,403</div><div class="sub">4 weekly runs + adjustments</div></div>
-    <div class="kpi"><div class="lbl">Admin &amp; Professional</div><div class="val">$4,887</div><div class="sub">Mgmt $3,750 + Cowley $900 + other</div></div>
-    <div class="kpi"><div class="lbl">Legal Fees YTD</div><div class="val red">$76,919</div><div class="sub">Paid · +$2,490 open AP · $5,500 budget</div></div>
-    <div class="kpi"><div class="lbl">Accounts Payable</div><div class="val warn">$6,123</div><div class="sub">↑ $2,342 vs Aug</div></div>
-  </div>
-  <div class="card"><h3>Monthly Expenses <span>Oct 2025 – Sep 2026</span></h3><div class="ch180"><canvas id="ov_expBar"></canvas></div></div>
 
   <div class="card">
     <div class="acc-item">
       <div class="acc-head" onclick="toggleAcc(this)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 0">
-        <strong>📖 Glossary — Terms Used in This Dashboard</strong>
+        <strong style="font-size:15px">Glossary <span class="muted" style="font-weight:500;font-size:12px">terms used in this dashboard</span></strong>
         <span>▼</span>
       </div>
       <div class="acc-body" style="padding-top:10px">
@@ -283,18 +290,19 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== TRENDS ===== -->
 <div id="trends" class="page">
+  <div class="page-head"><div><h1>Trends</h1><p>12-month and 5-year patterns in cash, income and spending</p></div><span class="period">Sep 30, 2026</span></div>
 
-  <div class="section-head">💰 Cash Position Trends</div>
+  <div class="section-head">Cash Position Trends</div>
   <div class="g2">
     <div class="card"><h3>12-Month Cash Balance <span>Oct 2025 – Sep 2026</span></h3><div class="ch260"><canvas id="tr_cashLine"></canvas></div></div>
     <div class="card"><h3>5-Year Year-End Cash <span>FY2022–FY2026</span></h3><div class="ch260"><canvas id="tr_annualCash"></canvas></div></div>
   </div>
   <div class="card"><h3>Monthly Net Cash Change <span>Oct 2025 – Sep 2026 · blue = positive, red = negative</span></h3><div class="ch200"><canvas id="tr_netBar"></canvas></div></div>
 
-  <div class="section-head">📈 Income &amp; Receivables Trends</div>
+  <div class="section-head">Income &amp; Receivables Trends</div>
   <div class="card">
     <h3>Monthly Income <span>Oct 2025 – Sep 2026 · bars = maintenance, line = total income</span></h3>
-    <p class="note" style="margin-bottom:8px">Elevated months: Oct 2025 includes large assessment billing; Feb/Mar 2026 include arrears collections; Jun 2026 includes $66,500 PMB payment + maintenance $72,351. Jul/Aug 2026 = normalized maintenance-only months (~$75–77K). Sep 2026 = $105,394, incl. one-time $22,450 PMB collection and $6,533 October maintenance prepaid. Assessment billing $0 from Jul 2026 forward.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note" style="margin-bottom:8px">Elevated months: Oct 2025 includes large assessment billing; Feb/Mar 2026 include arrears collections; Jun 2026 includes $66,500 PMB payment + maintenance $72,351. Jul/Aug 2026 = normalized maintenance-only months (~$75–77K). Sep 2026 = $105,394, incl. one-time $22,450 PMB collection and $6,533 October maintenance prepaid. Assessment billing $0 from Jul 2026 forward.</p></details>
     <div class="ch260"><canvas id="tr_incBreak"></canvas></div>
   </div>
   <div class="g2">
@@ -302,7 +310,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
     <div class="card"><h3>5-Year Annual Income <span>FY2022–FY2026</span></h3><div class="ch260"><canvas id="tr_annualInc"></canvas></div></div>
   </div>
 
-  <div class="section-head">📋 Expenses &amp; Payables Trends</div>
+  <div class="section-head">Expenses &amp; Payables Trends</div>
   <div class="card">
     <h3>Monthly Income vs Expenses <span>Oct 2025 – Sep 2026</span></h3>
     <p class="note" style="margin-bottom:8px">Expense spikes: Oct 2025, Jan/Apr 2026 = ~$88K quarterly RE tax. Jun 2026 = $164K (RE tax $93,503 + annual water $22,602). Jul/Aug/Sep 2026 = $40,361 / $44,493 / $29,714 (no RE tax). Next quarterly RE tax Oct 2026 (~$93.5K) from IDB Escrow ($132,402).</p>
@@ -331,7 +339,8 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== CASH POSITION ===== -->
 <div id="cash" class="page">
-  <div class="alert as">✅ <div><strong>Capital &amp; Covenant Funds:</strong> IDB MM $334,751 (capital reserve for flip taxes &amp; capital draws) + Flagstar $85,562 (mortgage covenant minimum) = <strong>$420,313</strong>. IDB Escrow is $132,402 after a $33,000 September transfer from operating, which covers the October quarterly (~$93.5K). Total cash is $700,333, a new FY27 high. <em>Fiscal year runs Feb–Jan; FY27 = Feb 2026–Jan 2027.</em></div></div>
+  <div class="page-head"><div><h1>Cash Position</h1><p>Balances by account and reserve adequacy · Sep 30, 2026</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="alert as"><div><strong>Capital &amp; Covenant Funds:</strong> IDB MM $334,751 (capital reserve for flip taxes &amp; capital draws) + Flagstar $85,562 (mortgage covenant minimum) = <strong>$420,313</strong>. IDB Escrow is $132,402 after a $33,000 September transfer from operating, which covers the October quarterly (~$93.5K). Total cash is $700,333, a new FY27 high. <em>Fiscal year runs Feb–Jan; FY27 = Feb 2026–Jan 2027.</em></div></div>
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">Total Cash</div><div class="val">$700,333</div><div class="chg up">↑ $75,681 vs Aug · FY27 high</div></div>
     <div class="kpi"><div class="lbl">Capital &amp; Covenant Reserves</div><div class="val green">$420,313</div><div class="sub">IDB MM (capital) + Flagstar (covenant)</div></div>
@@ -354,11 +363,11 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>Flagstar Restricted MM</td><td>Mortgage covenant; lender-required minimum balance</td><td class="r green">$85,562</td><td class="r">+$1</td><td class="r">12.2%</td></tr>
       <tr><td><strong>Total</strong></td><td></td><td class="r"><strong>$700,333</strong></td><td class="r green"><strong>+$75,681</strong></td><td class="r"><strong>100%</strong></td></tr>
     </tbody></table>
-    <p class="note">How September reconciles: operating receipts $104,263 (maintenance, PMB collection, late charges) − disbursements $29,714 − $33,000 transfer to IDB Escrow = +$41,550 in Cap One. Escrow +$33,265 = $33,000 transfer + $265 interest. IDB MM +$864 and Flagstar +$1 are interest. The transfer amount is implied by the account movements and is not itemized in the GL; confirm with Halstead. IDB MM is the <strong>capital fund</strong>, earmarked for capital projects (LL11, plumbing, etc.); the special assessment ($22,222/mo) ended June 2026, so IDB MM now grows only from flip taxes and interest. Flagstar is a <strong>mortgage covenant requirement</strong>, not a discretionary reserve. IDB Escrow is the <strong>RE tax reserve</strong>: October's quarterly payment will draw it down to ~$39K, and monthly transfers rebuild it for January.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">How September reconciles: operating receipts $104,263 (maintenance, PMB collection, late charges) − disbursements $29,714 − $33,000 transfer to IDB Escrow = +$41,550 in Cap One. Escrow +$33,265 = $33,000 transfer + $265 interest. IDB MM +$864 and Flagstar +$1 are interest. The transfer amount is implied by the account movements and is not itemized in the GL; confirm with Halstead. IDB MM is the <strong>capital fund</strong>, earmarked for capital projects (LL11, plumbing, etc.); the special assessment ($22,222/mo) ended June 2026, so IDB MM now grows only from flip taxes and interest. Flagstar is a <strong>mortgage covenant requirement</strong>, not a discretionary reserve. IDB Escrow is the <strong>RE tax reserve</strong>: October's quarterly payment will draw it down to ~$39K, and monthly transfers rebuild it for January.</p></details>
   </div>
   <div class="card">
     <h3>Reserve Adequacy Benchmark</h3>
-    <div class="alert aw" style="margin-bottom:10px">⚠️ <div>IDB MM has ~$112.6K of committed LL11 draws remaining (MSS APP7+ $83,240 + retainage $29,326). Benchmarks below are shown on a <strong>net basis</strong> (uncommitted reserves only). Gross: $420,313. Net of LL11: ~$307,747.</div></div>
+    <div class="alert aw" style="margin-bottom:10px"><div>IDB MM has ~$112.6K of committed LL11 draws remaining (MSS APP7+ $83,240 + retainage $29,326). Benchmarks below are shown on a <strong>net basis</strong> (uncommitted reserves only). Gross: $420,313. Net of LL11: ~$307,747.</div></div>
     <div style="margin:10px 0 14px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>$0</span><span style="color:var(--warn)">10% Min $88.6K</span><span style="color:var(--accent)">3-mo $223K</span><span style="color:var(--green)">6-mo $446K</span></div>
       <div style="background:var(--border);border-radius:6px;height:28px;position:relative;overflow:visible;margin-bottom:6px">
@@ -376,7 +385,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>3-Month Disbursements (FY27 budget $891,087 ÷ 4)</td><td class="r">$222,772</td><td class="r green">~$307,747</td><td class="r green">$420,313</td><td><span class="pill pg">✓ Exceeds</span></td></tr>
       <tr><td>6-Month Disbursements (ideal)</td><td class="r">$445,544</td><td class="r warn">~$307,747</td><td class="r warn">$420,313</td><td><span class="pill pw">⚠ Below ideal</span></td></tr>
     </tbody></table>
-    <p class="note">Net reserves = IDB MM $334,751 + Flagstar $85,562 − MSS LL11 balance $112,566 = ~$307,747. Benchmarks now use the FY27 budget (total disbursements $891,087, maintenance $885,913) instead of the older ~$816K base, which raises the thresholds. The 6-month ideal is not met on either basis, and the gap will remain after LL11 unless reserves are rebuilt through flip taxes or a new assessment. Excludes IDB Escrow (committed to RE tax) and Cap One (working capital).</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Net reserves = IDB MM $334,751 + Flagstar $85,562 − MSS LL11 balance $112,566 = ~$307,747. Benchmarks now use the FY27 budget (total disbursements $891,087, maintenance $885,913) instead of the older ~$816K base, which raises the thresholds. The 6-month ideal is not met on either basis, and the gap will remain after LL11 unless reserves are rebuilt through flip taxes or a new assessment. Excludes IDB Escrow (committed to RE tax) and Cap One (working capital).</p></details>
   </div>
   <div class="card">
     <h3>Reserve Strategy</h3>
@@ -385,13 +394,14 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>Confirm LL11 total project cost estimate</td><td class="r muted">No cost</td><td>Know how much of IDB MM ($335K) is committed before treating any surplus as available</td></tr>
       <tr><td>Commission reserve study</td><td class="r">$3K–8K one-time</td><td>Professional assessment of long-term capital needs; supports the 2033 mortgage refinancing; time alongside LL11 closeout</td></tr>
     </tbody></table>
-    <p class="note">IDB MM ($335K) is earmarked for capital projects, not a general operating reserve. Flagstar ($86K) is a lender-required minimum that cannot be freely drawn. Operating liquidity is managed through Cap One ($148K). Note that Cap One is temporarily elevated by the one-time PMB collection and the October prepayment.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">IDB MM ($335K) is earmarked for capital projects, not a general operating reserve. Flagstar ($86K) is a lender-required minimum that cannot be freely drawn. Operating liquidity is managed through Cap One ($148K). Note that Cap One is temporarily elevated by the one-time PMB collection and the October prepayment.</p></details>
   </div>
 </div>
 
 <!-- ===== INCOME & RECEIVABLES ===== -->
 <div id="income" class="page">
-  <div class="alert as">✅ <div><strong>Sep 2026:</strong> Total income was $105,394. On Sept 30 the $22,450 prior-management balance (PMB), unpaid since June, was <strong>collected in full</strong>, along with September charges and October maintenance paid early ($6,533 + $234 late charge). AR moved from $22,448 owed to a <strong>$6,769 credit</strong>. Every shareholder account is current. Excluding the one-time PMB collection, income was $82,944, and excluding the prepayment as well it was ~$76.2K, in line with July/August. Because a bankruptcy matter is still open, counsel should confirm the receipt is final.</div></div>
+  <div class="page-head"><div><h1>Income &amp; Receivables</h1><p>Collections, arrears and assessment history</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="alert as"><div><strong>Sep 2026:</strong> Total income was $105,394. On Sept 30 the $22,450 prior-management balance (PMB), unpaid since June, was <strong>collected in full</strong>, along with September charges and October maintenance paid early ($6,533 + $234 late charge). AR moved from $22,448 owed to a <strong>$6,769 credit</strong>. Every shareholder account is current. Excluding the one-time PMB collection, income was $82,944, and excluding the prepayment as well it was ~$76.2K, in line with July/August. Because a bankruptcy matter is still open, counsel should confirm the receipt is final.</div></div>
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">Total Income (Sep)</div><div class="val">$105,394</div><div class="chg up">Incl. $22,450 PMB collection</div></div>
     <div class="kpi"><div class="lbl">Maintenance Receipts</div><div class="val">$81,317</div><div class="sub">Billed $74,783 + $6,533 Oct prepay</div></div>
@@ -436,11 +446,11 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td></td>
       </tr>
     </tbody></table>
-    <p class="note" style="margin-top:10px">The PMB was arrears from a prior management period, tracked separately in MRI. Arrears peaked at $156,592 in Jan 2026, came down through June, and sat at ~$22.4K for July and August before being paid in full on Sept 30, 2026. The October prepayment means October maintenance receipts will be ~$6.8K lower than billing; this is a timing difference, not a shortfall. <strong>No shareholder account has a balance due.</strong></p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note" style="margin-top:10px">The PMB was arrears from a prior management period, tracked separately in MRI. Arrears peaked at $156,592 in Jan 2026, came down through June, and sat at ~$22.4K for July and August before being paid in full on Sept 30, 2026. The October prepayment means October maintenance receipts will be ~$6.8K lower than billing; this is a timing difference, not a shortfall. <strong>No shareholder account has a balance due.</strong></p></details>
     <p class="note" style="margin-top:6px"><strong>Follow-up:</strong> because a bankruptcy matter involving this account is still open, ask counsel to confirm the receipt is final before the board treats the arrears as settled. The enforcement referral authorized in August can be closed once counsel confirms.</p>
   </div>
 
-  <div class="alert ai">ℹ️ <div>Additional recoverable amounts (legal fees, LL remediation costs) and contingent flip taxes are tracked separately and are not included in MRI AR. See the <strong>Recoveries</strong> tab under Detailed Analysis.</div></div>
+  <div class="alert ai"><div>Additional recoverable amounts (legal fees, LL remediation costs) and contingent flip taxes are tracked separately and are not included in MRI AR. See the <strong>Recoveries</strong> tab under Detailed Analysis.</div></div>
 
   <div class="card">
     <h3>Capital Fund (IDB MM) — Assessment Collections <span>Feb – Sep 2026 (FY2027)</span></h3>
@@ -455,11 +465,11 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr style="background:rgba(56,193,114,.04)"><td><strong>September 2026</strong></td><td class="r muted"><strong>$0</strong></td><td class="r muted">—</td><td class="r muted">+$864 interest</td><td class="r green">$132,402 ↑ +$33K transfer · covers Oct quarterly</td></tr>
       <tr><td><strong>YTD Assessments</strong></td><td class="r"><strong>$119,169</strong></td><td class="r" colspan="3"><strong>IDB MM closing balance Sep 2026: $334,751</strong> · YTD capital spend $90,446 (MRI)</td></tr>
     </tbody></table>
-    <p class="note">The special assessment ($22,222/mo) <strong>ended June 2026</strong>; MRI confirms $0 for July, August and September. IDB MM is now sustained by flip taxes and interest until the board levies a new assessment. <strong>IDB Escrow (RE Tax)</strong> is a separate account funded by monthly operating transfers; the April and June RE tax payments came from IDB Escrow, not the capital fund. FY27 YTD capital spend per MRI is $90,446: exterior $51,637, plumbing $19,083, LL11 $16,163, LL97 $3,214, engineering $350. Monthly figures above are partly estimated.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">The special assessment ($22,222/mo) <strong>ended June 2026</strong>; MRI confirms $0 for July, August and September. IDB MM is now sustained by flip taxes and interest until the board levies a new assessment. <strong>IDB Escrow (RE Tax)</strong> is a separate account funded by monthly operating transfers; the April and June RE tax payments came from IDB Escrow, not the capital fund. FY27 YTD capital spend per MRI is $90,446: exterior $51,637, plumbing $19,083, LL11 $16,163, LL97 $3,214, engineering $350. Monthly figures above are partly estimated.</p></details>
   </div>
   <div class="card">
     <h3>Monthly Income Breakdown <span>Oct 2025 – Sep 2026</span></h3>
-    <p class="note" style="margin-bottom:8px">Bars = maintenance receipts (estimated for older months). Line = total operating income. The gap above the bars is variable income (arrears/PMB collections, interest, other). The Oct 2025 and Feb/Mar 2026 spikes reflect arrears collections and assessment billing. Sep 2026: maintenance receipts $81,317 (incl. $6,533 October prepayment) + PMB $22,450 + other $1,628.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note" style="margin-bottom:8px">Bars = maintenance receipts (estimated for older months). Line = total operating income. The gap above the bars is variable income (arrears/PMB collections, interest, other). The Oct 2025 and Feb/Mar 2026 spikes reflect arrears collections and assessment billing. Sep 2026: maintenance receipts $81,317 (incl. $6,533 October prepayment) + PMB $22,450 + other $1,628.</p></details>
     <div class="ch300"><canvas id="inc_break"></canvas></div>
   </div>
   <div class="card">
@@ -472,7 +482,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td><strong>Total Income</strong></td><td class="r"><strong>$105,394</strong></td><td class="r">$75,616</td><td class="r green"><strong>+$29,778</strong></td></tr>
       <tr style="color:var(--muted)"><td>FY27 YTD (Feb–Sep)</td><td class="r">$749,285</td><td class="r">$595,347</td><td class="r green">+$153,938</td></tr>
     </tbody></table>
-    <p class="note">The YTD income variance mostly comes from arrears/PMB collections ($84,570 YTD in Other Rent) and maintenance receipts above budget (+$55,068, including collected arrears and prepayments). It does not mean the run-rate is higher. Interest income is $9,679 YTD vs. a $10,000 annual budget and will exceed budget.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">The YTD income variance mostly comes from arrears/PMB collections ($84,570 YTD in Other Rent) and maintenance receipts above budget (+$55,068, including collected arrears and prepayments). It does not mean the run-rate is higher. Interest income is $9,679 YTD vs. a $10,000 annual budget and will exceed budget.</p></details>
   </div>
   <div class="g2">
     <div class="card"><h3>AR 12-Month Trend</h3><div class="ch260"><canvas id="inc_arLine"></canvas></div></div>
@@ -507,7 +517,8 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== EXPENSES & PAYABLES ===== -->
 <div id="expenses" class="page">
-  <div class="alert ai">ℹ️ <div><strong>Sep 2026:</strong> Expenses were $29,714, the lightest month of FY27 and $4,484 under the monthly budget ($34,198). No RE tax, insurance or legal payments this month. Admin $4,887 = mgmt fee $3,750 + Cowley Engineering $900 + monitoring/storage/phone/bank fees $237. Open AP rose to $6,123: new Braverman invoices ($2,490) and a Budget Plumbing no-hot-water call ($1,731), plus two aged items (CC Controlled Combustion $757 since March; DFH $1,259 since June). YTD, disbursements are $598,953 vs. a $522,067 YTD budget (+$76,886 over), nearly all of it Admin &amp; Professional (+$85,813, mainly legal).</div></div>
+  <div class="page-head"><div><h1>Expenses &amp; Payables</h1><p>Spending vs. budget and open invoices</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="alert ai"><div><strong>Sep 2026:</strong> Expenses were $29,714, the lightest month of FY27 and $4,484 under the monthly budget ($34,198). No RE tax, insurance or legal payments this month. Admin $4,887 = mgmt fee $3,750 + Cowley Engineering $900 + monitoring/storage/phone/bank fees $237. Open AP rose to $6,123: new Braverman invoices ($2,490) and a Budget Plumbing no-hot-water call ($1,731), plus two aged items (CC Controlled Combustion $757 since March; DFH $1,259 since June). YTD, disbursements are $598,953 vs. a $522,067 YTD budget (+$76,886 over), nearly all of it Admin &amp; Professional (+$85,813, mainly legal).</div></div>
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">Monthly Expenses (Sep)</div><div class="val green">$29,714</div><div class="sub">vs $34,198 budget · −$4,484</div></div>
     <div class="kpi"><div class="lbl">Payroll &amp; Benefits</div><div class="val">$11,403</div><div class="sub">Gross wages $10,545 + taxes/other</div></div>
@@ -544,7 +555,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>Debt Service</td><td class="r">$74,417</td><td class="r">$74,417</td><td class="r muted">$0</td><td class="r">$111,625</td><td class="r">$37,208</td></tr>
       <tr style="border-top:2px solid var(--border)"><td><strong>Total</strong></td><td class="r"><strong>$598,953</strong></td><td class="r"><strong>$522,067</strong></td><td class="r red"><strong>$76,886 over</strong></td><td class="r"><strong>$891,087</strong></td><td class="r"><strong>$292,134</strong></td></tr>
     </tbody></table>
-    <p class="note"><strong>Admin &amp; Professional</strong> ($131,093 YTD) has already exceeded its full-year budget by $61,543. Components: legal $76,919 (incl. $475 tax certiorari), management fee $30,000, engineering $10,104, misc. admin $9,580, accounting $4,240, telephone $250. <strong>Repairs</strong> are $8,538 over YTD (plumbing $8,399 vs. $4,336 budget; painting $4,507 and security $2,885 vs. $1,000 budget). <strong>Insurance</strong>: $25,678 of the annual budget is still unspent; expect a renewal premium before January (timing to be confirmed). Remaining RE tax ($189,090 budget) covers the Oct and Jan quarterlies (~$93.5K each). Capital spend ($90,446 YTD) is reported separately and excluded here.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note"><strong>Admin &amp; Professional</strong> ($131,093 YTD) has already exceeded its full-year budget by $61,543. Components: legal $76,919 (incl. $475 tax certiorari), management fee $30,000, engineering $10,104, misc. admin $9,580, accounting $4,240, telephone $250. <strong>Repairs</strong> are $8,538 over YTD (plumbing $8,399 vs. $4,336 budget; painting $4,507 and security $2,885 vs. $1,000 budget). <strong>Insurance</strong>: $25,678 of the annual budget is still unspent; expect a renewal premium before January (timing to be confirmed). Remaining RE tax ($189,090 budget) covers the Oct and Jan quarterlies (~$93.5K each). Capital spend ($90,446 YTD) is reported separately and excluded here.</p></details>
   </div>
   <div class="card">
     <h3>Open Accounts Payable — Sep 30, 2026 ($6,123)</h3>
@@ -557,13 +568,14 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>AvidXChange</td><td>Net credit (incentive credits less platform fees)</td><td>Various</td><td class="r green">($113.46)</td></tr>
       <tr><td><strong>Total Open AP</strong></td><td></td><td></td><td class="r"><strong>$6,122.93</strong></td></tr>
     </tbody></table>
-    <p class="note">Cleared since August: Jack Jaffa $150, Verizon $33, and Cowley Engineering ($900 paid; the Aug AP balance was $1,764, so <strong>$864 is unexplained</strong>; confirm with Halstead). <strong>Aged items:</strong> CC Controlled Combustion has been open 6+ months and DFH 3+ months; ask Halstead to pay or dispute. New Braverman invoices ($2,490) will hit legal expense when paid, bringing FY27 legal to $79,409.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Cleared since August: Jack Jaffa $150, Verizon $33, and Cowley Engineering ($900 paid; the Aug AP balance was $1,764, so <strong>$864 is unexplained</strong>; confirm with Halstead). <strong>Aged items:</strong> CC Controlled Combustion has been open 6+ months and DFH 3+ months; ask Halstead to pay or dispute. New Braverman invoices ($2,490) will hit legal expense when paid, bringing FY27 legal to $79,409.</p></details>
   </div>
 </div>
 
 <!-- ===== FY26 FORECAST ===== -->
 <div id="fy26" class="page">
-    <div class="alert ai">ℹ️ <div>4-month forward projection from Sep 2026 actuals through FY27 year-end (Oct 2026 – Jan 2027). Toggle capital projects on/off to model their impact on cash. All figures are estimates; actuals will replace them as MRI reports arrive. The Jan 2027 close feeds the FY28 Planning tab.</div></div>
+  <div class="page-head"><div><h1>FY27 Forecast</h1><p>Cash projection to FY27 year-end (Oct 2026 – Jan 2027) with capital project toggles</p></div><span class="period">Sep 30, 2026</span></div>
+    <div class="alert ai"><div>4-month forward projection from Sep 2026 actuals through FY27 year-end (Oct 2026 – Jan 2027). Toggle capital projects on/off to model their impact on cash. All figures are estimates; actuals will replace them as MRI reports arrive. The Jan 2027 close feeds the FY28 Planning tab.</div></div>
     <div class="kpi-grid">
       <div class="kpi"><div class="lbl">Opening Cash (Oct 1)</div><div class="val">$700,333</div><div class="sub">Sep 2026 close · all accounts</div></div>
       <div class="kpi"><div class="lbl">Projected Jan 2027 Close</div><div class="val" style="color:var(--accent)" id="fc26-kpi-total">—</div><div class="sub" id="fc26-kpi-sub">Calculating…</div></div>
@@ -626,13 +638,14 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <thead><tr><th>Month</th><th class="r">Maint. + Other</th><th class="r">Assessment</th><th class="r">Op. Expenses</th><th class="r">RE Tax (Escrow)</th><th class="r">Capital Projects (IDB MM)</th><th class="r">Net</th><th class="r">Total Cash</th><th class="r">IDB MM</th></tr></thead>
         <tbody id="fc26-tbody"></tbody>
       </table>
-      <p class="note">Opening balances are Sep 2026 actuals (Cap One $147,618 · IDB MM $334,751 · IDB Escrow $132,402 · Flagstar $85,562). <strong>Income:</strong> maintenance $74,783/mo + ~$2,500 other; October is reduced by the $6,769 already received in September as a prepayment. <strong>Op. expenses</strong> include payroll ~$11K, admin ~$5K, repairs ~$2K, debt service $9,302, seasonal utilities, the ~$31.3K monthly escrow transfer, and the remaining FY27 insurance budget ($25,678, spread evenly because the renewal date is unconfirmed). They exclude RE tax (paid from IDB Escrow) and capital draws (paid from IDB MM). <strong>RE tax:</strong> Oct and Jan quarterlies at $93,503 each, the same as the June 2026 payment. <strong>Special assessment:</strong> ended June 2026, so $0. Default LL11 timing (APP7 Nov, retainage Jan) is an assumption; APP7 has not been received.</p>
+      <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Opening balances are Sep 2026 actuals (Cap One $147,618 · IDB MM $334,751 · IDB Escrow $132,402 · Flagstar $85,562). <strong>Income:</strong> maintenance $74,783/mo + ~$2,500 other; October is reduced by the $6,769 already received in September as a prepayment. <strong>Op. expenses</strong> include payroll ~$11K, admin ~$5K, repairs ~$2K, debt service $9,302, seasonal utilities, the ~$31.3K monthly escrow transfer, and the remaining FY27 insurance budget ($25,678, spread evenly because the renewal date is unconfirmed). They exclude RE tax (paid from IDB Escrow) and capital draws (paid from IDB MM). <strong>RE tax:</strong> Oct and Jan quarterlies at $93,503 each, the same as the June 2026 payment. <strong>Special assessment:</strong> ended June 2026, so $0. Default LL11 timing (APP7 Nov, retainage Jan) is an assumption; APP7 has not been received.</p></details>
     </div>
 </div>
 
 <!-- ===== FY28 PLANNING ===== -->
 <div id="fy27" class="page">
-    <div class="alert ai">ℹ️ <div>Set FY28 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Jan 2027 close (FY27 year-end) from the FY27 Forecast tab. <strong>FY runs Feb–Jan · FY27 = Feb 2026–Jan 2027 (current) · FY28 = Feb 2027–Jan 2028 (planning year).</strong></div></div>
+  <div class="page-head"><div><h1>FY28 Planning</h1><p>Budget assumptions → monthly cash → required maintenance rate</p></div><span class="period">Sep 30, 2026</span></div>
+    <div class="alert ai"><div>Set FY28 budget assumptions → model monthly cash position → see the maintenance rate required to keep cash above the target buffer. Starting cash = projected Jan 2027 close (FY27 year-end) from the FY27 Forecast tab. <strong>FY runs Feb–Jan · FY27 = Feb 2026–Jan 2027 (current) · FY28 = Feb 2027–Jan 2028 (planning year).</strong></div></div>
     <div style="display:none" id="fc27-rate"></div>
     <div style="display:none" id="fc27-total"></div>
     <div style="display:none" id="fc27-floor"></div>
@@ -703,7 +716,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <h3>FY28 Budget Summary</h3>
       <table><thead><tr><th>Category</th><th class="r">FY27 Baseline (est.)</th><th class="r">FY28 Projected</th><th class="r">Change</th><th class="r">$/unit/mo</th></tr></thead>
       <tbody id="fc27-budget-tbody"></tbody></table>
-      <p class="note">Debt service fixed at $111,625/yr (interest-only) through Jan 2033 mortgage maturity. FY27 baseline column uses FY27 budget or run-rate estimates; FY27 actual admin is running well above budget because of legal. Intercom ongoing monthly fee (if carried from FY27 Forecast) included in admin line.</p>
+      <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Debt service fixed at $111,625/yr (interest-only) through Jan 2033 mortgage maturity. FY27 baseline column uses FY27 budget or run-rate estimates; FY27 actual admin is running well above budget because of legal. Intercom ongoing monthly fee (if carried from FY27 Forecast) included in admin line.</p></details>
     </div>
     <div class="card">
       <h3>Maintenance Rate Scenarios</h3>
@@ -715,6 +728,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== ADVISOR ===== -->
 <div id="advisor" class="page">
+  <div class="page-head"><div><h1>Health Analysis</h1><p>Scorecard, latest developments and forward-looking items</p></div><span class="period">Sep 30, 2026</span></div>
 
   <div class="section-head" style="margin-top:0">1 — Health Scorecard <span style="font-size:11px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;Sep 2026</span></div>
 
@@ -738,42 +752,45 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
   <div class="obs-card" style="border-left-color:var(--accent)"><strong>AP Housekeeping: Items to Resolve with Halstead</strong><p style="font-size:12px;color:var(--muted);margin-top:4px">(1) <strong>Cowley Engineering:</strong> Aug AP showed $1,764; $900 was paid in September and coded to <em>operating</em> engineering fees, not LL11 capital. The remaining $864 is gone from AP with no matching payment. (2) <strong>CC Controlled Combustion</strong> $757 has been open since March 2026. (3) <strong>DFH Security</strong> $1,259 has been open since June 2026. (4) <strong>Budget Plumbing</strong> $1,731 is new (9/23 no-hot-water call); confirm whether the cause is recurring. (5) MRI shows the Jack Jaffa monthly invoice dated 2/1/2024; confirm the billing reference.</p></div>
 
   <div class="section-head">3 — Forward Looking</div>
+  <div class="fwd-grid">
 
   <div class="fwd-card priority">
-    <h4>🎯 FY28 Maintenance Rate Decision</h4>
+    <h4>FY28 Maintenance Rate Decision</h4>
     <p>Current billing averages ~$4,674/unit/mo ($74,783 total). FY27 shows the budget pressure: YTD disbursements are $76,886 over budget, nearly all legal, while payroll and utilities are under. The FY28 Planning tab now includes insurance, supplies and corporate taxes (~$38K/yr, previously left out of the model). The rate needed to hold a $400K cash buffer depends on FY28 assumptions; a 3–5% increase is easiest to absorb, and holding flat may require a future special assessment.</p>
   </div>
 
   <div class="fwd-card priority">
-    <h4>🏗️ Capital Fund Runway After LL11</h4>
+    <h4>Capital Fund Runway After LL11</h4>
     <p>IDB MM is $334,751. All-in LL11 remaining outlay is estimated at $118–129K (MSS $112.6K + support vendors), leaving ~$205–217K after LL11. An intercom upgrade and any future plumbing capital work would draw on the same fund, which no longer receives assessment income. Consider a board resolution setting a minimum capital fund floor (e.g., $150K) before approving new capital spending.</p>
   </div>
 
   <div class="fwd-card watch">
-    <h4>⚡ LL97 Carbon Emissions — Plan Ahead</h4>
+    <h4>LL97 Carbon Emissions — Plan Ahead</h4>
     <p>Local Law 97 emissions caps tighten in 2030. 301-52 heats with gas (~$54K/yr budget), a significant emissions source. The 2024–2029 caps are less restrictive; 2030+ may require capital investment (heating upgrades, insulation, etc.), with costs that vary widely by building. LL97 filing work has started ($3,214, Jul 2026). Recommend an energy audit while the engineer is engaged, and model the heavier work as a capital project in FY28 Planning.</p>
   </div>
 
   <div class="fwd-card watch">
-    <h4>🏦 Mortgage Maturity — Begin Planning in 2031</h4>
+    <h4>Mortgage Maturity — Begin Planning in 2031</h4>
     <p>Current mortgage is $2.35M at 4.75% fixed, maturing January 2033, with interest-only debt service of $111,625/yr. There is no reason to refinance early at a fixed 4.75%. Begin lender conversations 18–24 months before maturity (mid-2031). A larger refinancing at maturity could fund LL97 or other capital needs, depending on rates at the time.</p>
   </div>
 
   <div class="fwd-card opportunity">
-    <h4>📋 Reserve Study — While LL11 Engineer is Engaged</h4>
+    <h4>Reserve Study — While LL11 Engineer is Engaged</h4>
     <p>A reserve study documents the building's physical condition and the capital contributions it will need over time. Cost: $3,000–$8,000. The LL11 engineer (Cowley/Patrizc) could potentially expand scope at marginal cost. Benefits: a defensible capital plan and better lender confidence at the 2033 refinancing.</p>
   </div>
 
   <div class="fwd-card opportunity">
-    <h4>💡 Utilities, Insurance &amp; RE Tax — Cost Review</h4>
+    <h4>Utilities, Insurance &amp; RE Tax — Cost Review</h4>
     <p>FY27 budgets: utilities $99,200 (incl. water/DEP $22,602), insurance $32,800, RE tax $371,000. Actions: (1) review Con Edison supply rates via the energy audit; (2) confirm the insurance renewal (~$25.7K of budget still unspent) is competitively shopped; (3) track the Podell Schwartz certiorari. As an illustration, a 5% assessment reduction on ~$371K would save ~$18.5K/yr.</p>
   </div>
 
+  </div>
 </div>
 
 <!-- ===== VENDOR REGISTER ===== -->
 <div id="vendors" class="page">
-  <div class="alert ai">ℹ️ <div>Main building vendors, sorted by category. Updated with September 2026 MRI actuals (check register + open AP). "Last Month" = cash paid in Sep 2026 unless noted. L12M figures are estimates; confirm minor vendors against the latest ledger.</div></div>
+  <div class="page-head"><div><h1>Vendor Register</h1><p>Main building vendors, last-month spend and approval guidance</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="alert ai"><div>Main building vendors, sorted by category. Updated with September 2026 MRI actuals (check register + open AP). "Last Month" = cash paid in Sep 2026 unless noted. L12M figures are estimates; confirm minor vendors against the latest ledger.</div></div>
   <div class="card">
     <h3>Main Building Vendors <span>Sep 2026 actuals · L12M estimates · sorted by category</span></h3>
     <table>
@@ -818,17 +835,15 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <tr style="background:rgba(231,76,60,.05)"><td><strong>New / Unknown Vendor</strong></td><td>Any</td><td class="r">—</td><td class="r">—</td><td>—</td><td><span class="pill pr">Always Escalate</span></td><td>Co-approver required for any unrecognized vendor before payment</td></tr>
       </tbody>
     </table>
-    <p class="note">Open AP Sep 30: $6,122.93 (Braverman $1,950 + $540, Budget Plumbing $1,731.11, DFH $1,258.60, CC Combustion $756.68, AvidXChange credit −$113.46). Paid since August: Cowley $900, Jack Jaffa $150, Verizon $32.44. Sep check register total: $18,953.69, plus $10,760 of journal-posted items (mortgage interest $9,302, payroll adjustments $1,418, bank fees $40) = $29,714 total disbursements.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Open AP Sep 30: $6,122.93 (Braverman $1,950 + $540, Budget Plumbing $1,731.11, DFH $1,258.60, CC Combustion $756.68, AvidXChange credit −$113.46). Paid since August: Cowley $900, Jack Jaffa $150, Verizon $32.44. Sep check register total: $18,953.69, plus $10,760 of journal-posted items (mortgage interest $9,302, payroll adjustments $1,418, bank fees $40) = $29,714 total disbursements.</p></details>
   </div>
 </div>
 
 <!-- ===== LL11 TRACKING ===== -->
 <div id="ll11" class="page">
-  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
-    <span style="font-size:20px">⚠️</span>
-    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">This tab contains data and estimates that are pending validation with Halstead and building counsel. Figures should not be treated as final until confirmed. Outstanding items are noted throughout — please review before distributing externally.</span></div>
-  </div>
-  <div class="alert aw">⚠️ <div><strong>Data as of APP6 (Mar 10, 2026).</strong> No LL11 capital spend in the Sep 2026 MRI. APP7+ not yet received — MSS contract balance of $112,566 includes $29,326 retainage; additional draws expected as work progresses. Braverman LL11 legal portion is an estimate — confirm % of YTD billings attributable to LL11 vs. other active matters.</div></div>
+  <div class="page-head"><div><h1>LL11 Tracking</h1><p>Façade repair contract, draws and total project cost</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="banner-validate"><strong>To be validated and confirmed.</strong> This tab contains data and estimates that are pending validation with Halstead and building counsel. Figures should not be treated as final until confirmed. Outstanding items are noted throughout — please review before distributing externally.</div>
+  <div class="alert aw"><div><strong>Data as of APP6 (Mar 10, 2026).</strong> No LL11 capital spend in the Sep 2026 MRI. APP7+ not yet received — MSS contract balance of $112,566 includes $29,326 retainage; additional draws expected as work progresses. Braverman LL11 legal portion is an estimate — confirm % of YTD billings attributable to LL11 vs. other active matters.</div></div>
 
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">MSS Contract Value</div><div class="val">$376,500</div><div class="sub">$372,500 original + $4,000 change order</div></div>
@@ -930,7 +945,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td></td>
       </tr>
     </tbody></table>
-    <p class="note">APP1 pay date estimated from ledger timing; all other pay dates from MRI Payee Ledger (Oct 2024–Mar 2026). APP7+ amounts are calculated residuals ($376,500 − $263,934 paid = $112,566, of which $29,326 is retainage). Retainage released upon project completion and lien period expiration.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">APP1 pay date estimated from ledger timing; all other pay dates from MRI Payee Ledger (Oct 2024–Mar 2026). APP7+ amounts are calculated residuals ($376,500 − $263,934 paid = $112,566, of which $29,326 is retainage). Retainage released upon project completion and lien period expiration.</p></details>
   </div>
 
   <div class="card">
@@ -1031,7 +1046,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td colspan="2" class="muted" style="font-size:11px">Incl. Braverman estimate midpoint + Sofia/Marmin/Fox Rothschild ($26,002)</td>
       </tr>
     </tbody></table>
-    <p class="note">DFH total = $4,393.11 (ledger through Mar 2026) + $2,885 (Jun 2026 pay run) + $1,259 (open AP Jun 30). Patrizc total = ~$22,350 through Feb 2026 + $5,500 May 2026. Braverman: "GENL SVC/EMAIL ACCESS AGREEMENT" line confirmed at $336; additional "GENERAL" items attributable to LL11 are estimated — confirm with Braverman or board counsel. <strong>Sofia Enterprise / Marmin Realty / Fox Rothschild access items</strong> are a separate, earlier (2025) neighbor-access negotiation at 229/299/309 E 52nd St — distinct from the Jun 2026 Three Ten Condominium item (310 E 53rd St). Confirmed directly from MRI Payee Ledger GL account 80105-000 (Sofia, Marmin) and 61210-000 (Fox Rothschild); not previously reflected on this tab.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">DFH total = $4,393.11 (ledger through Mar 2026) + $2,885 (Jun 2026 pay run) + $1,259 (open AP Jun 30). Patrizc total = ~$22,350 through Feb 2026 + $5,500 May 2026. Braverman: "GENL SVC/EMAIL ACCESS AGREEMENT" line confirmed at $336; additional "GENERAL" items attributable to LL11 are estimated — confirm with Braverman or board counsel. <strong>Sofia Enterprise / Marmin Realty / Fox Rothschild access items</strong> are a separate, earlier (2025) neighbor-access negotiation at 229/299/309 E 52nd St — distinct from the Jun 2026 Three Ten Condominium item (310 E 53rd St). Confirmed directly from MRI Payee Ledger GL account 80105-000 (Sofia, Marmin) and 61210-000 (Fox Rothschild); not previously reflected on this tab.</p></details>
   </div>
 
   <div class="card">
@@ -1122,18 +1137,16 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td>To be funded from IDB MM #1545</td>
       </tr>
     </tbody></table>
-    <p class="note">Total project cost estimate of <strong>~$472K–$484K</strong> compares to the $376,500 MSS construction contract alone — support vendors (arch, TPP, access, permits, site protection, legal) add an estimated 25–29% to headline contract cost. Funded from IDB MM #1545 (capital reserve, $334,751 at Sep 30, 2026). Remaining outlay of ~$118K–$130K is within current capital fund balance. <strong>Updated Aug 2026:</strong> a full review of the MRI Payee Ledger (Oct 2024–Mar 2026) turned up $26,002 of confirmed 2025 access-agreement costs (Sofia Enterprise LLC, Marmin Realty Corp., and related Fox Rothschild legal fees for access to 229/299/309 E 52nd St) that were not previously reflected on this tab. This raises the total project estimate and paid-to-date figures by $26,002 each — remaining outlay is unaffected since these were already-incurred 2025 costs.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">Total project cost estimate of <strong>~$472K–$484K</strong> compares to the $376,500 MSS construction contract alone — support vendors (arch, TPP, access, permits, site protection, legal) add an estimated 25–29% to headline contract cost. Funded from IDB MM #1545 (capital reserve, $334,751 at Sep 30, 2026). Remaining outlay of ~$118K–$130K is within current capital fund balance. <strong>Updated Aug 2026:</strong> a full review of the MRI Payee Ledger (Oct 2024–Mar 2026) turned up $26,002 of confirmed 2025 access-agreement costs (Sofia Enterprise LLC, Marmin Realty Corp., and related Fox Rothschild legal fees for access to 229/299/309 E 52nd St) that were not previously reflected on this tab. This raises the total project estimate and paid-to-date figures by $26,002 each — remaining outlay is unaffected since these were already-incurred 2025 costs.</p></details>
   </div>
 </div>
 
 <!-- ===== RECOVERIES ===== -->
 <div id="recoveries" class="page">
-  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
-    <span style="font-size:20px">⚠️</span>
-    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">The amounts on this tab are estimates pending confirmation with Braverman Greenspun and Halstead. They are not yet formally accrued and should not be communicated as established figures until counsel confirms amounts and timing.</span></div>
-  </div>
-  <div class="alert ai">ℹ️ <div><strong>Sep 2026:</strong> the prior-management balance tracked in MRI AR was collected in full on Sept 30, 2026, and MRI AR is now a credit. The recoveries below are separate items and remain open; they were not part of that payment.</div></div>
-  <div class="alert aw">⚠️ <div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from the relevant unit (secured by lien on shares). Update as confirmed with Braverman and Halstead.</div></div>
+  <div class="page-head"><div><h1>Recoveries</h1><p>Amounts recoverable by the co-op, outside MRI AR</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="banner-validate"><strong>To be validated and confirmed.</strong> The amounts on this tab are estimates pending confirmation with Braverman Greenspun and Halstead. They are not yet formally accrued and should not be communicated as established figures until counsel confirms amounts and timing.</div>
+  <div class="alert ai"><div><strong>Sep 2026:</strong> the prior-management balance tracked in MRI AR was collected in full on Sept 30, 2026, and MRI AR is now a credit. The recoveries below are separate items and remain open; they were not part of that payment.</div></div>
+  <div class="alert aw"><div>These amounts are <strong>not</strong> in the standard MRI AR balance. They represent costs incurred by the co-op that are recoverable from the relevant unit (secured by lien on shares). Update as confirmed with Braverman and Halstead.</div></div>
 
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">Potential Legal Fee Recovery</div><div class="val warn">TBD</div><div class="sub">Secured by lien on shares</div></div>
@@ -1168,11 +1181,9 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
 
 <!-- ===== LEGAL FEES ===== -->
 <div id="legal" class="page">
-  <div style="background:rgba(231,76,60,.12);border:2px solid var(--red);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
-    <span style="font-size:20px">⚠️</span>
-    <div><strong style="font-size:15px;color:var(--red)">To Be Validated and Confirmed</strong><br><span style="font-size:13px;line-height:1.6;color:var(--text)">Matter-level splits below are estimates; per-matter amounts have not been confirmed with Braverman Greenspun. YTD totals ($76,919 paid) and open AP ($2,490) are MRI actuals. The allocation between matters is the treasurer's estimate pending counsel confirmation.</span></div>
-  </div>
-  <div class="alert aw">⚠️ <div><strong>Legal fees — FY27 (Feb–Sep 2026):</strong> $76,919 paid YTD vs. a $5,500 annual budget. No legal fees were paid in September. Two new Braverman invoices dated 9/1 are open in AP: $540 (5C bankruptcy) + $1,950 (general) = $2,490, so incurred YTD is <strong>$79,409</strong>. The 5C bankruptcy matter is still billing. The PMB on that account was collected 9/30; counsel should confirm that receipt is final.</div></div>
+  <div class="page-head"><div><h1>Legal Fees</h1><p>FY27 legal spend by firm and matter</p></div><span class="period">Sep 30, 2026</span></div>
+  <div class="banner-validate"><strong>To be validated and confirmed.</strong> Matter-level splits below are estimates; per-matter amounts have not been confirmed with Braverman Greenspun. YTD totals ($76,919 paid) and open AP ($2,490) are MRI actuals. The allocation between matters is the treasurer's estimate pending counsel confirmation.</div>
+  <div class="alert aw"><div><strong>Legal fees — FY27 (Feb–Sep 2026):</strong> $76,919 paid YTD vs. a $5,500 annual budget. No legal fees were paid in September. Two new Braverman invoices dated 9/1 are open in AP: $540 (5C bankruptcy) + $1,950 (general) = $2,490, so incurred YTD is <strong>$79,409</strong>. The 5C bankruptcy matter is still billing. The PMB on that account was collected 9/30; counsel should confirm that receipt is final.</div></div>
 
   <div class="kpi-grid">
     <div class="kpi"><div class="lbl">Legal Fees Paid YTD (FY27)</div><div class="val red">$76,919</div><div class="sub">Feb – Sep 2026 · vs $5,500 annual budget</div></div>
@@ -1234,7 +1245,7 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
         <td colspan="2" class="muted" style="font-size:11px">MRI: legal fees $76,444 + tax certiorari $475. Braverman split between matters is estimated. Excludes $2,490 open AP.</td>
       </tr>
     </tbody></table>
-    <p class="note">The LL11-related legal portion (Three Ten access negotiations, Armstrong Teasdale) is properly a <strong>capital expense</strong> and belongs in the LL11 project cost; see the LL11 Tracking tab. Operating legal should normalize once the 5C bankruptcy is resolved. Fox Rothschild's <strong>$750 Audit Letter</strong> is separate from ~$6,902 of earlier (Oct 2024–Aug 2025) Fox Rothschild fees for the Sofia Enterprise / Marmin Realty access negotiations, which are tracked as a 2025 LL11 capital cost on the LL11 Tracking tab.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">The LL11-related legal portion (Three Ten access negotiations, Armstrong Teasdale) is properly a <strong>capital expense</strong> and belongs in the LL11 project cost; see the LL11 Tracking tab. Operating legal should normalize once the 5C bankruptcy is resolved. Fox Rothschild's <strong>$750 Audit Letter</strong> is separate from ~$6,902 of earlier (Oct 2024–Aug 2025) Fox Rothschild fees for the Sofia Enterprise / Marmin Realty access negotiations, which are tracked as a 2025 LL11 capital cost on the LL11 Tracking tab.</p></details>
   </div>
 
   <div class="card">
@@ -1261,14 +1272,17 @@ nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;backgr
       <tr><td>Elevated (new matter)</td><td class="r warn">$50,000–$75,000</td><td>A new litigation matter on top of existing ones; flag to the board immediately</td></tr>
       <tr><td>FY27 YTD through Sep (elevated)</td><td class="r red">$76,919 paid / $79,409 incurred</td><td>5C bankruptcy (ongoing) + general + Podell Schwartz certiorari</td></tr>
     </tbody></table>
-    <p class="note">For FY28 budget modeling, $35,000 is a reasonable legal assumption within the <strong>FY28 Planning → Admin &amp; Legal</strong> input (which also covers management fee, accounting and other admin). Any new litigation or lender counsel engagement should trigger a board notification and budget revision.</p>
+    <details class="more"><summary>Notes &amp; methodology</summary><p class="note">For FY28 budget modeling, $35,000 is a reasonable legal assumption within the <strong>FY28 Planning → Admin &amp; Legal</strong> input (which also covers management fee, accounting and other admin). Any new litigation or lender counsel engagement should trigger a board notification and budget revision.</p></details>
   </div>
+</div>
+
+</main>
 </div>
 
 <script>
 // ===== DATA =====
 const M12=['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26'];
-document.getElementById('navMonthLabel').textContent='301-52 Financials as of '+M12[M12.length-1];
+(function(){const m=M12[M12.length-1].split(' ');document.getElementById('navMonthLabel').textContent=m[0]+' 20'+m[1];})();
 const CASH=[547781,586082,574902,521412,532145,621314,514611,569506,560951,592150,624652,700333];
 const INC=[130965,69572,63377,73224,81851,123984,65145,78763,142026,75043,76996,105394];
 const EXP=[135850,41352,46234,135879,65866,69645,147174,36818,164408,40361,44493,29714];
@@ -1297,15 +1311,15 @@ const FC_PREPAY_26=[6769,0,0,0]; // Oct charges already received in Sep as prepa
 let fc26Ch=null,fc27Ch=null;
 const fcFmt=n=>'$'+Math.round(n).toLocaleString();
 const fcFmtK=n=>'$'+Math.round(n/1000)+'K';
-const fcChOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fcFmt(c.raw)}}},scales:{x:{ticks:{color:'#8892a4',font:{size:10}},grid:{color:'#2e3347'}},y:{ticks:{color:'#8892a4',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#2e3347'}}}};
+const fcChOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fcFmt(c.raw)}}},scales:{x:{ticks:{color:'#6b7a90',font:{size:10}},grid:{color:'#eef1f6'}},y:{ticks:{color:'#6b7a90',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#eef1f6'}}}};
 
 // ===== CHART INITIALIZATION — wrapped in try-catch so a CDN failure cannot halt forecast calculations =====
 try {
 if(typeof Chart==='undefined') throw new Error('Chart.js not loaded');
-Chart.defaults.color='#8892a4';
-Chart.defaults.borderColor='#2e3347';
+Chart.defaults.color='#6b7a90';
+Chart.defaults.borderColor='#e4e8f0';
 Chart.defaults.font={family:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',size:12};
-const grid={color:'rgba(46,51,71,.5)'};
+const grid={color:'#eef1f6'};
 const tip={callbacks:{label:ctx=>' $'+Math.round(ctx.raw).toLocaleString()}};
 const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:12,padding:12}},tooltip:tip},scales:{x:{grid},y:{grid,ticks:{callback:v=>'$'+Math.round(v/1000)+'K'}}}};
 
@@ -1319,14 +1333,11 @@ const NET=CASH.map((c,i)=>prev[i]!==null?c-prev[i]:null).slice(1);
 const NET_LABELS=M12.slice(1);
 
 // ===== OVERVIEW CHARTS =====
-new Chart(document.getElementById('ov_cashPie'),{type:'doughnut',data:{labels:['IDB MM','IDB Escrow','Flagstar (Covenant)','Cap One'],datasets:[{data:[334751,132402,85562,147618],backgroundColor:['#4f8ef7','#f5a623','#38c172','#8892a4'],borderWidth:0}]},options:donutOpts});
-new Chart(document.getElementById('ov_netBar'),{type:'bar',data:{labels:NET_LABELS,datasets:[{data:NET,backgroundColor:NET.map(v=>v>=0?'rgba(56,193,114,.7)':'rgba(231,76,60,.6)'),borderWidth:0,label:'Net Cash Change'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:tip},scales:{x:{grid:{display:false}},y:{grid,ticks:{callback:v=>'$'+Math.round(v/1000)+'K'}}}}});
-mkBar('ov_incBar',M12,[{label:'Maint. Est.',data:MAINT_EST,backgroundColor:'rgba(56,193,114,.6)',borderWidth:0},{label:'Variable/Other',data:INC.map((v,i)=>Math.max(0,v-MAINT_EST[i])),backgroundColor:'rgba(79,142,247,.5)',borderWidth:0}],true);
-mkBar('ov_expBar',M12,[{label:'Expenses',data:EXP,backgroundColor:EXP.map(v=>v>120000?'rgba(231,76,60,.7)':'rgba(245,166,35,.55)'),borderWidth:0}]);
+mkBar('ov_incExp',M12,[{label:'Income',data:INC,backgroundColor:'rgba(31,157,85,.75)',borderRadius:4,borderWidth:0},{label:'Expenses',data:EXP,backgroundColor:'rgba(47,111,237,.55)',borderRadius:4,borderWidth:0}]);
 
 // ===== TRENDS CHARTS =====
 mkLine('tr_cashLine',M12,[{label:'Total Cash',data:CASH,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:0.3,pointRadius:4}]);
-new Chart(document.getElementById('tr_annualCash'),{type:'bar',data:{labels:FY,datasets:[{data:FY_CASH,backgroundColor:['#334155','#334155','#334155','rgba(231,76,60,.4)','#4f8ef7'],borderColor:['#4f8ef7','#4f8ef7','#4f8ef7','#e74c3c','#4f8ef7'],borderWidth:2,label:'Year-End Cash'}]},options:{...baseOpts,plugins:{legend:{display:false},tooltip:tip}}});
+new Chart(document.getElementById('tr_annualCash'),{type:'bar',data:{labels:FY,datasets:[{data:FY_CASH,backgroundColor:['#c9d6f5','#c9d6f5','#c9d6f5','rgba(214,69,69,.35)','#2f6fed'],borderColor:['#4f8ef7','#4f8ef7','#4f8ef7','#e74c3c','#4f8ef7'],borderWidth:2,label:'Year-End Cash'}]},options:{...baseOpts,plugins:{legend:{display:false},tooltip:tip}}});
 new Chart(document.getElementById('tr_netBar'),{type:'bar',data:{labels:NET_LABELS,datasets:[{data:NET,backgroundColor:NET.map(v=>v>=0?'rgba(56,193,114,.7)':'rgba(231,76,60,.6)'),borderWidth:0,label:'Net Cash Change'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:tip},scales:{x:{grid:{display:false}},y:{grid,ticks:{callback:v=>'$'+Math.round(v/1000)+'K'}}}}});
 // Income breakdown chart (bar=maint, line=total)
 new Chart(document.getElementById('tr_incBreak'),{type:'bar',data:{labels:M12,datasets:[
@@ -1477,7 +1488,7 @@ function fcRecalc27(){
     mmA.push(Math.round(mm));
   }
   if(fc27Ch){try{fc27Ch.destroy();}catch(ex){}}
-  const fc27ChOpts={...fcChOpts,scales:{...fcChOpts.scales,y:{...fcChOpts.scales?.y,min:0,ticks:{color:'#8892a4',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#2e3347'}}}};
+  const fc27ChOpts={...fcChOpts,scales:{...fcChOpts.scales,y:{...fcChOpts.scales?.y,min:0,ticks:{color:'#6b7a90',font:{size:10},callback:v=>fcFmtK(v)},grid:{color:'#eef1f6'}}}};
   try{fc27Ch=new Chart(document.getElementById('fc27chart'),{type:'line',data:{labels:FC_MONTHS_27,datasets:[
     {label:'Total Cash',data:totA,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:3},
     {label:'IDB MM',data:mmA,borderColor:'#38c172',backgroundColor:'transparent',tension:.3,borderWidth:2,pointRadius:3,borderDash:[4,2]},
@@ -1533,6 +1544,7 @@ function showPage(id,btn){
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
+  window.scrollTo(0,0);
 }
 </script>
 </body>
